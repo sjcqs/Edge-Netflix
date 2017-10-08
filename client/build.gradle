@@ -1,4 +1,4 @@
-group 'Edge Netflix'
+group 'edge-netflix'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
