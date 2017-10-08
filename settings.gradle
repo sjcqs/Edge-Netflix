@@ -1,0 +1,6 @@
+rootProject.name = 'Edge Netflix'
+include 'client'
+include 'portal'
+include 'seeder'
+include 'test'
+
