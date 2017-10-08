@@ -1,7 +1,5 @@
 package cli.command;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +10,7 @@ import java.util.List;
 public abstract class Command implements Runnable{
     protected List<String> arguments;
 
-    public Command(@Nullable List<String> arguments){
+    public Command(List<String> arguments){
         this.arguments = arguments;
     }
 
