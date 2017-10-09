@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Created by satyan on 10/7/17.
  * Client
- * TODO: Add RESTManager to centralize REST infos (ip, port, data, etc)
+ * TODO: Add RESTManager to centralize REST info (ip, port, data, etc)
  */
 public class Client {
 
@@ -30,8 +30,8 @@ public class Client {
                         CommandParser.parse(Arrays.asList(args))
                                 .run();
                     } catch (IllegalArgumentException e) {
-                        System.err.println();
-                        System.err.println("Command not found.");
+                        System.out.println();
+                        System.out.println(e.getLocalizedMessage());
                     }
                     System.out.print("> ");
                 } else {

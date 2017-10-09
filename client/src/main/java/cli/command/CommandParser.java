@@ -36,12 +36,24 @@ public class CommandParser {
     }
 
     private static ListSeedersCommand parseSeeder(List<String> args) throws IllegalArgumentException{
+        IllegalArgumentException ex = new IllegalArgumentException(
+                "ERROR\n" +
+                        "\tUnknown seeder command\n" +
+                        "USAGE\n" +
+                        "\tseeder list\n" +
+                        "\t\tPrint all available seeders\n" +
+                        "\tseeder search KEYWORDS\n" +
+                        "\t\t Print all available seeders matching KEYWORDS"
+        );
+        if (args == null || args.size() < 1){
+            throw ex;
+        }
         if (args.get(0).equals("list")){
             return new ListSeedersCommand();
         } else if (args.get(0).equals("search")){
             return new ListSeedersCommand(args.subList(1,args.size()));
         } else {
-            throw new IllegalArgumentException("This command doesn't exist");
+            throw ex;
         }
     }
 }
