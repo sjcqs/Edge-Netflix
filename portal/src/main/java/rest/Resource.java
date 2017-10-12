@@ -6,7 +6,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Created by satyan on 10/7/17.
  */
-@Path("home")
+@Path("seeder")
 public class Resource {
     // A basic resource accessible at http://localhost:2222/home/hello.
     @GET
