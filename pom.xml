@@ -8,6 +8,7 @@
   <modules>
     <module>portal</module>
     <module>seeder</module>
+    <module>bencoder</module>
   </modules>
   <packaging>pom</packaging>
 
