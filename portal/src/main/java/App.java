@@ -12,7 +12,7 @@ public class App
     public static void main( String[] args )
     {
         ResourceConfig config = new ResourceConfig();
-        config.packages("");
+        config.packages("rest");
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
 
         Server server = new Server(2222);
