@@ -1,14 +1,22 @@
-package cli.command
+package client.cli
+
+import client.cli.command.DownloadFileCommand
+import client.cli.command.ExitCommand
+import client.cli.command.FileInformationCommand
+import client.cli.command.HelpCommand
+import client.cli.command.ListFilesCommand
+import client.cli.command.ListSeedersCommand
+import client.cli.command.PlayVideoCommand
+import client.cli.command.SubscribeCommand
 
 /**
- * Created by satyan on 10/9/17.
- * CommandParser unit test
+ * Created by satyan on 10/13/17.
  */
 class CommandParserTest extends GroovyTestCase {
     void testParse() {
-        def command
+        def command;
         //Unknown command
-        def msg = shouldFail IllegalArgumentException,{
+        def msg = shouldFail(IllegalArgumentException){
             command = CommandParser.parse(Arrays.asList("random stuff".split("\\s")))
         }
         assert msg.contains("This command doesn't exist")
