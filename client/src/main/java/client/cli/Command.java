@@ -15,6 +15,6 @@ public abstract class Command implements Runnable{
     }
 
     public Command(){
-        this(new ArrayList<String>());
+        this(new ArrayList<>());
     }
 }
