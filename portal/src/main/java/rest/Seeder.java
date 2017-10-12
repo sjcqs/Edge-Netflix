@@ -13,12 +13,12 @@ public class Seeder {
     @GET
     @Path("list")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getSeederList(@QueryParam("name") String name) {
-        if(name == null){
+    public String getSeederList(@QueryParam("keywords") String keywords) {
+        if(keywords == null){
             return seederList();
         }
         else
-            return seederListSearch(name);
+            return seederListSearch(keywords);
     }
 
     private String seederListSearch(String name) {

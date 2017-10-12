@@ -23,7 +23,7 @@ public class Video {
     @Path("play")
     @Produces(MediaType.TEXT_PLAIN)
     public String play(@QueryParam("name") String name) {
-        // TODO: return the resources used to download the file (.torrent file/seeder/ whatever)
+        // TODO: return the resources used to play the file (.torrent file/seeder/ whatever)
         return Video.class.getName() + " PLAY " + name;
     }
 }
