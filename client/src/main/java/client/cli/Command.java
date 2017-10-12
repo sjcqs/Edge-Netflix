@@ -1,4 +1,4 @@
-package cli.command;
+package client.cli;
 
 import java.util.ArrayList;
 import java.util.List;

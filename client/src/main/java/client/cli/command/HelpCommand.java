@@ -1,10 +1,12 @@
-package cli.command;
+package client.cli.command;
 
+
+import client.cli.Command;
 
 /**
  * Created by satyan on 10/8/17.
  */
-public class HelpCommand extends Command{
+public class HelpCommand extends Command {
     private static final String ANSI_PLAIN_TEXT = "\033[0;0m";
     private static final String ANSI_BOLD_TEXT = "\033[0;1m";
     @Override
