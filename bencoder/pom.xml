@@ -7,10 +7,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>seeder</artifactId>
+    <artifactId>bencoder</artifactId>
     <packaging>jar</packaging>
 
-    <name>seeder</name>
+    <name>bencoder</name>
     <url>http://maven.apache.org</url>
 
     <properties>

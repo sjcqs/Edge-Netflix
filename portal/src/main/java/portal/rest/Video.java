@@ -1,4 +1,4 @@
-package rest;
+package portal.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

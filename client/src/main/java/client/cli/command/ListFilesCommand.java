@@ -1,4 +1,6 @@
-package cli.command;
+package client.cli.command;
+
+import client.cli.Command;
 
 /**
  * Created by satyan on 10/8/17.

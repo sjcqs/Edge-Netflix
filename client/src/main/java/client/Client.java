@@ -1,5 +1,7 @@
-import cli.command.CommandParser;
-import cli.command.HelpCommand;
+package client;
+
+import client.cli.CommandParser;
+import client.cli.command.HelpCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * Created by satyan on 10/7/17.
- * Client
+ * client.Client
  * TODO: Add RESTManager to centralize REST info (ip, port, data, etc)
  */
 public class Client {

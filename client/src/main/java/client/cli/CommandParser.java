@@ -1,4 +1,6 @@
-package cli.command;
+package client.cli;
+
+import client.cli.command.*;
 
 import java.util.List;
 
