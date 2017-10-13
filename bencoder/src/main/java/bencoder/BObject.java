@@ -5,14 +5,10 @@ package bencoder;
  * A interface to define a element that can be bencoded.
  */
 public abstract class BObject {
-    protected int size;
     public abstract String encode();
 
     public int getSize() {
-        return size;
+        return encode().length();
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
 }
