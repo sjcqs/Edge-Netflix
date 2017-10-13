@@ -2,6 +2,8 @@ package bencoder.types;
 
 import bencoder.BObject;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by satyan on 10/12/17.
  * A bencoded integer
@@ -11,7 +13,6 @@ public class BInteger extends BObject {
 
     public BInteger(int value) {
         this.value = value;
-        setSize(encode().length());
     }
 
     public int getValue() {
@@ -26,19 +27,19 @@ public class BInteger extends BObject {
         return "i" + value + "e";
     }
 
-    public static BInteger decode(String encoded, final int index){
-        if (encoded.charAt(index) != 'i'){
+    public static BInteger decode(String encoded, final AtomicInteger index){
+        if (encoded.charAt(index.get()) != 'i'){
             throw new IllegalArgumentException("Index must be the index of the 'i' delimiter");
         }
-        final int start = index + 1;
-        final int end = encoded.indexOf("e",start);
+        index.set(index.get() + 1);
+        final int end = encoded.indexOf("e",index.get());
 
-        final String number = encoded.substring(start,end);
-        if (number.matches("(-0|0).+")){
+        final String number = encoded.substring(index.get(),end);
+        if (number.matches("(-0.*|0.+)") || number.matches(".*[^-0-9].*")){
             throw new IllegalArgumentException("Unknown bencoded integer format. (number cannot start with -0 or 0)");
         }
         final int value = Integer.valueOf(number);
-
+        index.set(end + 1);
         return new BInteger(value);
     }
 

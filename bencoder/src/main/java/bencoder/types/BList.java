@@ -1,108 +1,143 @@
 package bencoder.types;
 
+import bencoder.BDecoder;
 import bencoder.BObject;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * Created by satyan on 10/12/17.
+ * A bencoded list.
  */
 public class BList extends BObject implements List<BObject> {
     private List<BObject> list;
 
+    public BList(List<BObject> list) {
+        this.list = new ArrayList<>(list);
+    }
+
+    public BList() {
+        this.list = new ArrayList<>();
+    }
+
     public String encode() {
-        return null;
+        String content = "";
+        for (BObject bObject : list) {
+            content += bObject.encode();
+        }
+        return 'l' + content + 'e';
+    }
+
+    public static BList decode(String encoded, final AtomicInteger index){
+        BList list = new BList();
+        if (encoded.charAt(index.get()) != 'l'){
+            throw new IllegalArgumentException("Invalid index, list format: l<content>e");
+        }
+        index.set(index.get() + 1);
+        while (encoded.charAt(index.get()) != 'e'){
+            BObject object = BDecoder.decode(encoded,index);
+            list.add(object);
+        }
+        index.set(index.get() + 1);
+        return list;
     }
 
     public int size() {
-        return 0;
+        return list.size();
     }
 
     public boolean isEmpty() {
-        return false;
+        return list.isEmpty();
     }
 
     public boolean contains(Object o) {
-        return false;
+        return list.contains(o);
     }
 
     public Iterator<BObject> iterator() {
-        return null;
+        return list.iterator();
     }
 
     public Object[] toArray() {
-        return new Object[0];
+        return list.toArray();
     }
 
     public <T> T[] toArray(T[] ts) {
-        return null;
+        return list.toArray(ts);
     }
 
     public boolean add(BObject bObject) {
-        return false;
+        return list.add(bObject);
     }
 
     public boolean remove(Object o) {
-        return false;
+        return list.remove(o);
     }
 
     public boolean containsAll(Collection<?> collection) {
-        return false;
+        return list.containsAll(collection);
     }
 
     public boolean addAll(Collection<? extends BObject> collection) {
-        return false;
+        return list.addAll(collection);
     }
 
     public boolean addAll(int i, Collection<? extends BObject> collection) {
-        return false;
+        return list.addAll(i,collection);
     }
 
     public boolean removeAll(Collection<?> collection) {
-        return false;
+        return list.removeAll(collection);
     }
 
     public boolean retainAll(Collection<?> collection) {
-        return false;
+        return list.retainAll(collection);
     }
 
     public void clear() {
-
+        list.clear();
     }
 
     public BObject get(int i) {
-        return null;
+        return list.get(i);
     }
 
     public BObject set(int i, BObject bObject) {
-        return null;
+        return list.set(i,bObject);
     }
 
     public void add(int i, BObject bObject) {
-
+        list.add(i,bObject);
     }
 
     public BObject remove(int i) {
-        return null;
+        return list.remove(i);
     }
 
     public int indexOf(Object o) {
-        return 0;
+        return list.indexOf(o);
     }
 
     public int lastIndexOf(Object o) {
-        return 0;
+        return list.lastIndexOf(o);
     }
 
     public ListIterator<BObject> listIterator() {
-        return null;
+        return list.listIterator();
     }
 
     public ListIterator<BObject> listIterator(int i) {
-        return null;
+        return list.listIterator(i);
     }
 
     public List<BObject> subList(int i, int i1) {
-        return null;
+        return list.subList(i,i1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof BList && ((BList) o).list.equals(list));
     }
 }
