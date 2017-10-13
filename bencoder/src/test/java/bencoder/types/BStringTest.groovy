@@ -5,11 +5,17 @@ package bencoder.types
  */
 class BStringTest extends GroovyTestCase {
 
+    final BString res = new BString("spam")
+    final String expected = "4:spam"
+
     void testEncode() {
-        assert new BString("spam").encode() == "4:spam"
+        assert res.encode() == expected
+        assert new BString("").encode() == "0:"
+        assert new BString("Hello world !").encode() == "13:Hello world !"
     }
 
     void testDecode() {
-
+        assert BString.decode(expected,0) == res
+        assert BString.decode("0:",0) == new BString("")
     }
 }

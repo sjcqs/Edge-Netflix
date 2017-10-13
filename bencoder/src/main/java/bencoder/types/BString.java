@@ -4,6 +4,7 @@ import bencoder.BObject;
 
 /**
  * Created by satyan on 10/12/17.
+ * A bencoded string
  */
 public class BString extends BObject {
     private String value;
@@ -30,5 +31,10 @@ public class BString extends BObject {
         int length = Integer.valueOf(encoded.substring(start,separatorIndex));
         String value = encoded.substring(separatorIndex + 1,separatorIndex + 1 + length);
         return new BString(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof BString && value.equals(((BString) o).getValue());
     }
 }
