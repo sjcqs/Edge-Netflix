@@ -7,7 +7,7 @@ import java.util.List;
  * Created by satyan on 10/7/17.
  * Command abstract class
  */
-public abstract class Command implements Runnable{
+public abstract class Command implements Executable{
     protected List<String> arguments;
 
     public Command(List<String> arguments){

@@ -18,9 +18,11 @@ public class CommandParser {
         }
         if (command.equals("seeder")) {
             return parseSeeder(params);
+        } else if (command.equals("video")){
+            return parseVideo(params);
         } else if (command.equals("download")) {
             return new DownloadFileCommand(params);
-        } else if (command.equals("list") && args.get(1).equals("files")) {
+        } else if (args.size() > 1 && command.equals("list") && args.get(1).equals("files")) {
             return new ListFilesCommand();
         } else if (command.equals("info")) {
             return new FileInformationCommand(params);
@@ -34,6 +36,28 @@ public class CommandParser {
             return new ExitCommand();
         } else {
             throw new IllegalArgumentException("This command doesn't exist");
+        }
+    }
+
+    private static ListVideosCommand parseVideo(List<String> args) throws IllegalArgumentException{
+        IllegalArgumentException ex = new IllegalArgumentException(
+                "ERROR\n" +
+                        "\tUnknown video command\n" +
+                        "USAGE\n" +
+                        "\tvideo list\n" +
+                        "\t\tPrint all available videos\n" +
+                        "\tvideo search KEYWORDS\n" +
+                        "\t\t Print all available videos matching KEYWORDS"
+        );
+        if (args == null || args.size() < 1){
+            throw ex;
+        }
+        if (args.get(0).equals("list")){
+            return new ListVideosCommand();
+        } else if (args.get(0).equals("search")){
+            return new ListVideosCommand(args.subList(1,args.size()));
+        } else {
+            throw ex;
         }
     }
 

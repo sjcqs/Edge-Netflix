@@ -1,16 +1,18 @@
 package client.cli.command;
 
 
+import client.RequestManager;
 import client.cli.Command;
 
 /**
  * Created by satyan on 10/8/17.
+ * Print the help
  */
 public class HelpCommand extends Command {
     private static final String ANSI_PLAIN_TEXT = "\033[0;0m";
     private static final String ANSI_BOLD_TEXT = "\033[0;1m";
     @Override
-    public void run() {
+    public void run(RequestManager manager) {
         printHelp(false);
     }
 
@@ -34,6 +36,10 @@ public class HelpCommand extends Command {
                    "\t\tList all available seeders");
            System.out.println("\tseeder search KEYWORDS\n" +
                    "\t\tList all available seeders that match KEYWORDS");
+            System.out.println("\tvideo list\n" +
+                    "\t\tList all available videos");
+            System.out.println("\tvideo search KEYWORDS\n" +
+                    "\t\tList all available videos that match KEYWORDS");
            System.out.println("\tdownload FILE\n" +
                    "\t\tDownload FILE");
            System.out.println("\tlist files\n" +

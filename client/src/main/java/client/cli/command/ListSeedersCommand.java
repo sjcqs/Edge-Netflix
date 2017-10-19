@@ -1,22 +1,18 @@
 package client.cli.command;
 
-import client.cli.Command;
-
 import java.util.List;
 
 /**
  * Created by satyan on 10/8/17.
+ * List the seeders available (all and searched)
  */
-public class ListSeedersCommand extends Command {
+public class ListSeedersCommand extends ListCommand {
+    private static final String ADDRESS = "/seeder/list";
+
     public ListSeedersCommand(){
-        super();
+        super(ADDRESS);
     }
     public ListSeedersCommand(List<String> args){
-        super(args);
+        super(args,ADDRESS);
     }
-    @Override
-    public void run() {
-        System.out.println(getClass().getName());
-    }
-
 }

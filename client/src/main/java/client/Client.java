@@ -17,7 +17,10 @@ import java.util.Arrays;
 public class Client {
 
     public static void main(String[] argv){
+        RequestManager requestManager = null;
         try {
+            requestManager = new RequestManager("http://35.195.238.86",8080);
+            requestManager.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
             boolean stop = false;
             HelpCommand.printHelp(true);
@@ -30,7 +33,7 @@ public class Client {
                     String[] args = input.split("\\s");
                     try {
                         CommandParser.parse(Arrays.asList(args))
-                                .run();
+                                .run(requestManager);
                     } catch (IllegalArgumentException e) {
                         System.out.println();
                         System.out.println(e.getLocalizedMessage());
@@ -44,6 +47,16 @@ public class Client {
             System.exit(1);
         } catch (IOException e) {
             System.exit(2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (requestManager != null){
+                try {
+                    requestManager.stop();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
