@@ -17,6 +17,8 @@
 # Gradle generated files
 bin/
 gen/
+**/out/
+**/target/
 
 # Local configuration file used for proj. specific settings (sdk paths, etc)
 local.properties
