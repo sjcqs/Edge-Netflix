@@ -10,11 +10,12 @@ import client.cli.command.PlayVideoCommand
 import client.cli.command.SubscribeCommand
 
 /**
- * Created by satyan on 10/13/17.
+ * Created by satyan on 10/19/17.
+ * Test the command parser
  */
 class CommandParserTest extends GroovyTestCase {
     void testParse() {
-        def command;
+        def command
         //Unknown command
         def msg = shouldFail(IllegalArgumentException){
             command = CommandParser.parse(Arrays.asList("random stuff".split("\\s")))
