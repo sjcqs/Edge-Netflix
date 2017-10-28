@@ -16,7 +16,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private Seeder() {
-    name_ = "";
   }
 
   @java.lang.Override
@@ -48,9 +47,29 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
+            route.Video.Builder subBuilder = null;
+            if (video_ != null) {
+              subBuilder = video_.toBuilder();
+            }
+            video_ = input.readMessage(route.Video.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(video_);
+              video_ = subBuilder.buildPartial();
+            }
 
-            name_ = s;
+            break;
+          }
+          case 18: {
+            route.Endpoint.Builder subBuilder = null;
+            if (endpoint_ != null) {
+              subBuilder = endpoint_.toBuilder();
+            }
+            endpoint_ = input.readMessage(route.Endpoint.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(endpoint_);
+              endpoint_ = subBuilder.buildPartial();
+            }
+
             break;
           }
         }
@@ -77,38 +96,46 @@ private static final long serialVersionUID = 0L;
             route.Seeder.class, route.Seeder.Builder.class);
   }
 
-  public static final int NAME_FIELD_NUMBER = 1;
-  private volatile java.lang.Object name_;
+  public static final int VIDEO_FIELD_NUMBER = 1;
+  private route.Video video_;
   /**
-   * <code>string name = 1;</code>
+   * <code>.route.Video video = 1;</code>
    */
-  public java.lang.String getName() {
-    java.lang.Object ref = name_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      name_ = s;
-      return s;
-    }
+  public boolean hasVideo() {
+    return video_ != null;
   }
   /**
-   * <code>string name = 1;</code>
+   * <code>.route.Video video = 1;</code>
    */
-  public com.google.protobuf.ByteString
-      getNameBytes() {
-    java.lang.Object ref = name_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      name_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public route.Video getVideo() {
+    return video_ == null ? route.Video.getDefaultInstance() : video_;
+  }
+  /**
+   * <code>.route.Video video = 1;</code>
+   */
+  public route.VideoOrBuilder getVideoOrBuilder() {
+    return getVideo();
+  }
+
+  public static final int ENDPOINT_FIELD_NUMBER = 2;
+  private route.Endpoint endpoint_;
+  /**
+   * <code>.route.Endpoint endpoint = 2;</code>
+   */
+  public boolean hasEndpoint() {
+    return endpoint_ != null;
+  }
+  /**
+   * <code>.route.Endpoint endpoint = 2;</code>
+   */
+  public route.Endpoint getEndpoint() {
+    return endpoint_ == null ? route.Endpoint.getDefaultInstance() : endpoint_;
+  }
+  /**
+   * <code>.route.Endpoint endpoint = 2;</code>
+   */
+  public route.EndpointOrBuilder getEndpointOrBuilder() {
+    return getEndpoint();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -123,8 +150,11 @@ private static final long serialVersionUID = 0L;
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+    if (video_ != null) {
+      output.writeMessage(1, getVideo());
+    }
+    if (endpoint_ != null) {
+      output.writeMessage(2, getEndpoint());
     }
     unknownFields.writeTo(output);
   }
@@ -134,8 +164,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+    if (video_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(1, getVideo());
+    }
+    if (endpoint_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, getEndpoint());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -153,8 +188,16 @@ private static final long serialVersionUID = 0L;
     route.Seeder other = (route.Seeder) obj;
 
     boolean result = true;
-    result = result && getName()
-        .equals(other.getName());
+    result = result && (hasVideo() == other.hasVideo());
+    if (hasVideo()) {
+      result = result && getVideo()
+          .equals(other.getVideo());
+    }
+    result = result && (hasEndpoint() == other.hasEndpoint());
+    if (hasEndpoint()) {
+      result = result && getEndpoint()
+          .equals(other.getEndpoint());
+    }
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -166,8 +209,14 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + NAME_FIELD_NUMBER;
-    hash = (53 * hash) + getName().hashCode();
+    if (hasVideo()) {
+      hash = (37 * hash) + VIDEO_FIELD_NUMBER;
+      hash = (53 * hash) + getVideo().hashCode();
+    }
+    if (hasEndpoint()) {
+      hash = (37 * hash) + ENDPOINT_FIELD_NUMBER;
+      hash = (53 * hash) + getEndpoint().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -297,8 +346,18 @@ private static final long serialVersionUID = 0L;
     }
     public Builder clear() {
       super.clear();
-      name_ = "";
-
+      if (videoBuilder_ == null) {
+        video_ = null;
+      } else {
+        video_ = null;
+        videoBuilder_ = null;
+      }
+      if (endpointBuilder_ == null) {
+        endpoint_ = null;
+      } else {
+        endpoint_ = null;
+        endpointBuilder_ = null;
+      }
       return this;
     }
 
@@ -321,7 +380,16 @@ private static final long serialVersionUID = 0L;
 
     public route.Seeder buildPartial() {
       route.Seeder result = new route.Seeder(this);
-      result.name_ = name_;
+      if (videoBuilder_ == null) {
+        result.video_ = video_;
+      } else {
+        result.video_ = videoBuilder_.build();
+      }
+      if (endpointBuilder_ == null) {
+        result.endpoint_ = endpoint_;
+      } else {
+        result.endpoint_ = endpointBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -363,9 +431,11 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(route.Seeder other) {
       if (other == route.Seeder.getDefaultInstance()) return this;
-      if (!other.getName().isEmpty()) {
-        name_ = other.name_;
-        onChanged();
+      if (other.hasVideo()) {
+        mergeVideo(other.getVideo());
+      }
+      if (other.hasEndpoint()) {
+        mergeEndpoint(other.getEndpoint());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -394,73 +464,238 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object name_ = "";
+    private route.Video video_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        route.Video, route.Video.Builder, route.VideoOrBuilder> videoBuilder_;
     /**
-     * <code>string name = 1;</code>
+     * <code>.route.Video video = 1;</code>
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        name_ = s;
-        return s;
+    public boolean hasVideo() {
+      return videoBuilder_ != null || video_ != null;
+    }
+    /**
+     * <code>.route.Video video = 1;</code>
+     */
+    public route.Video getVideo() {
+      if (videoBuilder_ == null) {
+        return video_ == null ? route.Video.getDefaultInstance() : video_;
       } else {
-        return (java.lang.String) ref;
+        return videoBuilder_.getMessage();
       }
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>.route.Video video = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
+    public Builder setVideo(route.Video value) {
+      if (videoBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        video_ = value;
+        onChanged();
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        videoBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Video video = 1;</code>
+     */
+    public Builder setVideo(
+        route.Video.Builder builderForValue) {
+      if (videoBuilder_ == null) {
+        video_ = builderForValue.build();
+        onChanged();
+      } else {
+        videoBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Video video = 1;</code>
+     */
+    public Builder mergeVideo(route.Video value) {
+      if (videoBuilder_ == null) {
+        if (video_ != null) {
+          video_ =
+            route.Video.newBuilder(video_).mergeFrom(value).buildPartial();
+        } else {
+          video_ = value;
+        }
+        onChanged();
+      } else {
+        videoBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Video video = 1;</code>
+     */
+    public Builder clearVideo() {
+      if (videoBuilder_ == null) {
+        video_ = null;
+        onChanged();
+      } else {
+        video_ = null;
+        videoBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Video video = 1;</code>
+     */
+    public route.Video.Builder getVideoBuilder() {
+      
+      onChanged();
+      return getVideoFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.route.Video video = 1;</code>
+     */
+    public route.VideoOrBuilder getVideoOrBuilder() {
+      if (videoBuilder_ != null) {
+        return videoBuilder_.getMessageOrBuilder();
+      } else {
+        return video_ == null ?
+            route.Video.getDefaultInstance() : video_;
       }
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>.route.Video video = 1;</code>
      */
-    public Builder setName(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      name_ = value;
-      onChanged();
+    private com.google.protobuf.SingleFieldBuilderV3<
+        route.Video, route.Video.Builder, route.VideoOrBuilder> 
+        getVideoFieldBuilder() {
+      if (videoBuilder_ == null) {
+        videoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            route.Video, route.Video.Builder, route.VideoOrBuilder>(
+                getVideo(),
+                getParentForChildren(),
+                isClean());
+        video_ = null;
+      }
+      return videoBuilder_;
+    }
+
+    private route.Endpoint endpoint_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        route.Endpoint, route.Endpoint.Builder, route.EndpointOrBuilder> endpointBuilder_;
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    public boolean hasEndpoint() {
+      return endpointBuilder_ != null || endpoint_ != null;
+    }
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    public route.Endpoint getEndpoint() {
+      if (endpointBuilder_ == null) {
+        return endpoint_ == null ? route.Endpoint.getDefaultInstance() : endpoint_;
+      } else {
+        return endpointBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    public Builder setEndpoint(route.Endpoint value) {
+      if (endpointBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        endpoint_ = value;
+        onChanged();
+      } else {
+        endpointBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>.route.Endpoint endpoint = 2;</code>
      */
-    public Builder clearName() {
-      
-      name_ = getDefaultInstance().getName();
-      onChanged();
+    public Builder setEndpoint(
+        route.Endpoint.Builder builderForValue) {
+      if (endpointBuilder_ == null) {
+        endpoint_ = builderForValue.build();
+        onChanged();
+      } else {
+        endpointBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>.route.Endpoint endpoint = 2;</code>
      */
-    public Builder setNameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      name_ = value;
-      onChanged();
+    public Builder mergeEndpoint(route.Endpoint value) {
+      if (endpointBuilder_ == null) {
+        if (endpoint_ != null) {
+          endpoint_ =
+            route.Endpoint.newBuilder(endpoint_).mergeFrom(value).buildPartial();
+        } else {
+          endpoint_ = value;
+        }
+        onChanged();
+      } else {
+        endpointBuilder_.mergeFrom(value);
+      }
+
       return this;
+    }
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    public Builder clearEndpoint() {
+      if (endpointBuilder_ == null) {
+        endpoint_ = null;
+        onChanged();
+      } else {
+        endpoint_ = null;
+        endpointBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    public route.Endpoint.Builder getEndpointBuilder() {
+      
+      onChanged();
+      return getEndpointFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    public route.EndpointOrBuilder getEndpointOrBuilder() {
+      if (endpointBuilder_ != null) {
+        return endpointBuilder_.getMessageOrBuilder();
+      } else {
+        return endpoint_ == null ?
+            route.Endpoint.getDefaultInstance() : endpoint_;
+      }
+    }
+    /**
+     * <code>.route.Endpoint endpoint = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        route.Endpoint, route.Endpoint.Builder, route.EndpointOrBuilder> 
+        getEndpointFieldBuilder() {
+      if (endpointBuilder_ == null) {
+        endpointBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            route.Endpoint, route.Endpoint.Builder, route.EndpointOrBuilder>(
+                getEndpoint(),
+                getParentForChildren(),
+                isClean());
+        endpoint_ = null;
+      }
+      return endpointBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

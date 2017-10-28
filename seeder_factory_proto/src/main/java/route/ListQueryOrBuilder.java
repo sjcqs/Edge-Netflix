@@ -8,12 +8,21 @@ public interface ListQueryOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string keywords = 1;</code>
+   * <code>repeated string keyword = 1;</code>
    */
-  java.lang.String getKeywords();
+  java.util.List<java.lang.String>
+      getKeywordList();
   /**
-   * <code>string keywords = 1;</code>
+   * <code>repeated string keyword = 1;</code>
+   */
+  int getKeywordCount();
+  /**
+   * <code>repeated string keyword = 1;</code>
+   */
+  java.lang.String getKeyword(int index);
+  /**
+   * <code>repeated string keyword = 1;</code>
    */
   com.google.protobuf.ByteString
-      getKeywordsBytes();
+      getKeywordBytes(int index);
 }

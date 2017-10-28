@@ -35,7 +35,7 @@ public class SeederFactoryClient {
         blockingStub = SeederFactoryGrpc.newBlockingStub(channel);
     }
 
-    public String createSeeder(String name){
+    public Seeder createSeeder(String name){
         Video.Builder video = Video.newBuilder();
         video.setName(name);
         Seeder seeder = null;
@@ -44,17 +44,19 @@ public class SeederFactoryClient {
         } catch (StatusRuntimeException ex){
             logger.log(Level.WARNING,ex.getMessage());
         }
-        if (seeder != null){
-            return seeder.getName();
-        }
 
-        return null;
+        return seeder;
     }
 
-    public List<Seeder> listSeeders(String keywords){
+    public List<Seeder> listSeeders(String[] keywords){
         List<Seeder> seeders = new LinkedList<>();
         ListQuery.Builder builder = ListQuery.newBuilder();
-        builder.setKeywords(keywords);
+
+        if (keywords != null) {
+            for (String keyword : keywords) {
+                builder.addKeyword(keyword);
+            }
+        }
 
         try {
             Iterator<Seeder> it = blockingStub.listSeeders(builder.build());

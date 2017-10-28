@@ -16,4 +16,41 @@ public interface VideoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getNameBytes();
+
+  /**
+   * <code>.route.Size size = 2;</code>
+   */
+  boolean hasSize();
+  /**
+   * <code>.route.Size size = 2;</code>
+   */
+  route.Size getSize();
+  /**
+   * <code>.route.Size size = 2;</code>
+   */
+  route.SizeOrBuilder getSizeOrBuilder();
+
+  /**
+   * <code>int32 bitrate = 3;</code>
+   */
+  int getBitrate();
+
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  java.util.List<java.lang.String>
+      getKeywordList();
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  int getKeywordCount();
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  java.lang.String getKeyword(int index);
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getKeywordBytes(int index);
 }

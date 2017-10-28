@@ -17,13 +17,28 @@ service SeederFactory{
 }
 
 message ListQuery{
-    string keywords = 1;
+    repeated string keyword = 1;
+}
+
+message Size{
+    int32 width = 1;
+    int32 height = 2;
 }
 
 message Video {
- string name = 1;
+    string name = 1;
+    Size size = 2;
+    int32 bitrate = 3;
+    repeated string keyword = 4;
+}
+
+message Endpoint{
+    string transport = 1;
+    string ip = 2;
+    int32 port = 3;
 }
 
 message Seeder {
-    string name = 1;
+    Video video = 1;
+    Endpoint endpoint = 2;
 }

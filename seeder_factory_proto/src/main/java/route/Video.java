@@ -17,6 +17,8 @@ private static final long serialVersionUID = 0L;
   }
   private Video() {
     name_ = "";
+    bitrate_ = 0;
+    keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
@@ -53,6 +55,33 @@ private static final long serialVersionUID = 0L;
             name_ = s;
             break;
           }
+          case 18: {
+            route.Size.Builder subBuilder = null;
+            if (size_ != null) {
+              subBuilder = size_.toBuilder();
+            }
+            size_ = input.readMessage(route.Size.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(size_);
+              size_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 24: {
+
+            bitrate_ = input.readInt32();
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+              keyword_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000008;
+            }
+            keyword_.add(s);
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -61,6 +90,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+        keyword_ = keyword_.getUnmodifiableView();
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -77,6 +109,7 @@ private static final long serialVersionUID = 0L;
             route.Video.class, route.Video.Builder.class);
   }
 
+  private int bitField0_;
   public static final int NAME_FIELD_NUMBER = 1;
   private volatile java.lang.Object name_;
   /**
@@ -111,6 +144,65 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int SIZE_FIELD_NUMBER = 2;
+  private route.Size size_;
+  /**
+   * <code>.route.Size size = 2;</code>
+   */
+  public boolean hasSize() {
+    return size_ != null;
+  }
+  /**
+   * <code>.route.Size size = 2;</code>
+   */
+  public route.Size getSize() {
+    return size_ == null ? route.Size.getDefaultInstance() : size_;
+  }
+  /**
+   * <code>.route.Size size = 2;</code>
+   */
+  public route.SizeOrBuilder getSizeOrBuilder() {
+    return getSize();
+  }
+
+  public static final int BITRATE_FIELD_NUMBER = 3;
+  private int bitrate_;
+  /**
+   * <code>int32 bitrate = 3;</code>
+   */
+  public int getBitrate() {
+    return bitrate_;
+  }
+
+  public static final int KEYWORD_FIELD_NUMBER = 4;
+  private com.google.protobuf.LazyStringList keyword_;
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  public com.google.protobuf.ProtocolStringList
+      getKeywordList() {
+    return keyword_;
+  }
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  public int getKeywordCount() {
+    return keyword_.size();
+  }
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  public java.lang.String getKeyword(int index) {
+    return keyword_.get(index);
+  }
+  /**
+   * <code>repeated string keyword = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getKeywordBytes(int index) {
+    return keyword_.getByteString(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -126,6 +218,15 @@ private static final long serialVersionUID = 0L;
     if (!getNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
     }
+    if (size_ != null) {
+      output.writeMessage(2, getSize());
+    }
+    if (bitrate_ != 0) {
+      output.writeInt32(3, bitrate_);
+    }
+    for (int i = 0; i < keyword_.size(); i++) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, keyword_.getRaw(i));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -136,6 +237,22 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+    }
+    if (size_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, getSize());
+    }
+    if (bitrate_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, bitrate_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < keyword_.size(); i++) {
+        dataSize += computeStringSizeNoTag(keyword_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getKeywordList().size();
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -155,6 +272,15 @@ private static final long serialVersionUID = 0L;
     boolean result = true;
     result = result && getName()
         .equals(other.getName());
+    result = result && (hasSize() == other.hasSize());
+    if (hasSize()) {
+      result = result && getSize()
+          .equals(other.getSize());
+    }
+    result = result && (getBitrate()
+        == other.getBitrate());
+    result = result && getKeywordList()
+        .equals(other.getKeywordList());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -168,6 +294,16 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + NAME_FIELD_NUMBER;
     hash = (53 * hash) + getName().hashCode();
+    if (hasSize()) {
+      hash = (37 * hash) + SIZE_FIELD_NUMBER;
+      hash = (53 * hash) + getSize().hashCode();
+    }
+    hash = (37 * hash) + BITRATE_FIELD_NUMBER;
+    hash = (53 * hash) + getBitrate();
+    if (getKeywordCount() > 0) {
+      hash = (37 * hash) + KEYWORD_FIELD_NUMBER;
+      hash = (53 * hash) + getKeywordList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -299,6 +435,16 @@ private static final long serialVersionUID = 0L;
       super.clear();
       name_ = "";
 
+      if (sizeBuilder_ == null) {
+        size_ = null;
+      } else {
+        size_ = null;
+        sizeBuilder_ = null;
+      }
+      bitrate_ = 0;
+
+      keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000008);
       return this;
     }
 
@@ -321,7 +467,21 @@ private static final long serialVersionUID = 0L;
 
     public route.Video buildPartial() {
       route.Video result = new route.Video(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.name_ = name_;
+      if (sizeBuilder_ == null) {
+        result.size_ = size_;
+      } else {
+        result.size_ = sizeBuilder_.build();
+      }
+      result.bitrate_ = bitrate_;
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        keyword_ = keyword_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000008);
+      }
+      result.keyword_ = keyword_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -367,6 +527,22 @@ private static final long serialVersionUID = 0L;
         name_ = other.name_;
         onChanged();
       }
+      if (other.hasSize()) {
+        mergeSize(other.getSize());
+      }
+      if (other.getBitrate() != 0) {
+        setBitrate(other.getBitrate());
+      }
+      if (!other.keyword_.isEmpty()) {
+        if (keyword_.isEmpty()) {
+          keyword_ = other.keyword_;
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          ensureKeywordIsMutable();
+          keyword_.addAll(other.keyword_);
+        }
+        onChanged();
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -393,6 +569,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private java.lang.Object name_ = "";
     /**
@@ -459,6 +636,243 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       name_ = value;
+      onChanged();
+      return this;
+    }
+
+    private route.Size size_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        route.Size, route.Size.Builder, route.SizeOrBuilder> sizeBuilder_;
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public boolean hasSize() {
+      return sizeBuilder_ != null || size_ != null;
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public route.Size getSize() {
+      if (sizeBuilder_ == null) {
+        return size_ == null ? route.Size.getDefaultInstance() : size_;
+      } else {
+        return sizeBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public Builder setSize(route.Size value) {
+      if (sizeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        size_ = value;
+        onChanged();
+      } else {
+        sizeBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public Builder setSize(
+        route.Size.Builder builderForValue) {
+      if (sizeBuilder_ == null) {
+        size_ = builderForValue.build();
+        onChanged();
+      } else {
+        sizeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public Builder mergeSize(route.Size value) {
+      if (sizeBuilder_ == null) {
+        if (size_ != null) {
+          size_ =
+            route.Size.newBuilder(size_).mergeFrom(value).buildPartial();
+        } else {
+          size_ = value;
+        }
+        onChanged();
+      } else {
+        sizeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public Builder clearSize() {
+      if (sizeBuilder_ == null) {
+        size_ = null;
+        onChanged();
+      } else {
+        size_ = null;
+        sizeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public route.Size.Builder getSizeBuilder() {
+      
+      onChanged();
+      return getSizeFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    public route.SizeOrBuilder getSizeOrBuilder() {
+      if (sizeBuilder_ != null) {
+        return sizeBuilder_.getMessageOrBuilder();
+      } else {
+        return size_ == null ?
+            route.Size.getDefaultInstance() : size_;
+      }
+    }
+    /**
+     * <code>.route.Size size = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        route.Size, route.Size.Builder, route.SizeOrBuilder> 
+        getSizeFieldBuilder() {
+      if (sizeBuilder_ == null) {
+        sizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            route.Size, route.Size.Builder, route.SizeOrBuilder>(
+                getSize(),
+                getParentForChildren(),
+                isClean());
+        size_ = null;
+      }
+      return sizeBuilder_;
+    }
+
+    private int bitrate_ ;
+    /**
+     * <code>int32 bitrate = 3;</code>
+     */
+    public int getBitrate() {
+      return bitrate_;
+    }
+    /**
+     * <code>int32 bitrate = 3;</code>
+     */
+    public Builder setBitrate(int value) {
+      
+      bitrate_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 bitrate = 3;</code>
+     */
+    public Builder clearBitrate() {
+      
+      bitrate_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.LazyStringList keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureKeywordIsMutable() {
+      if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+        keyword_ = new com.google.protobuf.LazyStringArrayList(keyword_);
+        bitField0_ |= 0x00000008;
+       }
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getKeywordList() {
+      return keyword_.getUnmodifiableView();
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public int getKeywordCount() {
+      return keyword_.size();
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public java.lang.String getKeyword(int index) {
+      return keyword_.get(index);
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeywordBytes(int index) {
+      return keyword_.getByteString(index);
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public Builder setKeyword(
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeywordIsMutable();
+      keyword_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public Builder addKeyword(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeywordIsMutable();
+      keyword_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public Builder addAllKeyword(
+        java.lang.Iterable<java.lang.String> values) {
+      ensureKeywordIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, keyword_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public Builder clearKeyword() {
+      keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string keyword = 4;</code>
+     */
+    public Builder addKeywordBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureKeywordIsMutable();
+      keyword_.add(value);
       onChanged();
       return this;
     }

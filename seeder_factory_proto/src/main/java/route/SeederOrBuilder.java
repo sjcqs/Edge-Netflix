@@ -8,12 +8,28 @@ public interface SeederOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string name = 1;</code>
+   * <code>.route.Video video = 1;</code>
    */
-  java.lang.String getName();
+  boolean hasVideo();
   /**
-   * <code>string name = 1;</code>
+   * <code>.route.Video video = 1;</code>
    */
-  com.google.protobuf.ByteString
-      getNameBytes();
+  route.Video getVideo();
+  /**
+   * <code>.route.Video video = 1;</code>
+   */
+  route.VideoOrBuilder getVideoOrBuilder();
+
+  /**
+   * <code>.route.Endpoint endpoint = 2;</code>
+   */
+  boolean hasEndpoint();
+  /**
+   * <code>.route.Endpoint endpoint = 2;</code>
+   */
+  route.Endpoint getEndpoint();
+  /**
+   * <code>.route.Endpoint endpoint = 2;</code>
+   */
+  route.EndpointOrBuilder getEndpointOrBuilder();
 }

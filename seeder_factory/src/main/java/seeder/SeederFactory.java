@@ -4,6 +4,7 @@ package seeder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+import route.Endpoint;
 import route.Seeder;
 import route.SeederFactoryGrpc.SeederFactoryImplBase;
 import route.Video;
@@ -11,6 +12,7 @@ import route.Video;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -70,7 +72,13 @@ public class SeederFactory {
         @Override
         public void createSeeder(Video request, StreamObserver<Seeder> responseObserver) {
             Seeder.Builder builder = Seeder.newBuilder();
-            builder.setName(request.getName());
+            Endpoint.Builder endpointBuilder = Endpoint.newBuilder();
+            endpointBuilder.setIp("localhost");
+            endpointBuilder.setPort(1002);
+            endpointBuilder.setTransport("tcp");
+            builder.setVideo(request);
+            builder.setEndpoint(endpointBuilder.build());
+
             Seeder seeder = builder.build();
             seeders.add(seeder);
             responseObserver.onNext(seeder);
@@ -79,13 +87,31 @@ public class SeederFactory {
 
         @Override
         public void listSeeders(route.ListQuery request, StreamObserver<Seeder> responseObserver) {
-            String keywords = request.getKeywords();
-            for(Seeder seeder : seeders) {
-                if (keywords.isEmpty()) {
+            List<String> keywords = request.getKeywordList();
+            if (request.getKeywordCount() == 0){
+                for(Seeder seeder : seeders) {
                     responseObserver.onNext(seeder);
-                } else {
-                    if (keywords.contains(seeder.getName())) {
-                        responseObserver.onNext(seeder);
+                }
+            } else {
+                // Check if a keyword or the video name is matching
+                for(Seeder seeder : seeders) {
+                    for (String keyword : keywords) {
+                        Video video = seeder.getVideo();
+                        logger.log(Level.INFO, video.getName() + " : " + keyword);
+                        boolean send = false;
+                        if (video.getName().contains(keyword)) {
+                            send = true;
+                        } else {
+                            for (String str : video.getKeywordList()) {
+                                if (str.equals(keyword)) {
+                                    send = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (send) {
+                            responseObserver.onNext(seeder);
+                        }
                     }
                 }
             }
