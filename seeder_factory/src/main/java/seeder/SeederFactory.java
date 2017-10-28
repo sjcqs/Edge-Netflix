@@ -71,6 +71,7 @@ public class SeederFactory {
 
         @Override
         public void createSeeder(Video request, StreamObserver<Seeder> responseObserver) {
+            // TODO create a new seeder and add the real port
             Seeder.Builder builder = Seeder.newBuilder();
             Endpoint.Builder endpointBuilder = Endpoint.newBuilder();
             endpointBuilder.setIp("localhost");

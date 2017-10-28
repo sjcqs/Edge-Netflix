@@ -37,6 +37,7 @@ public class SeederFactoryClient {
 
     public Seeder createSeeder(String name){
         Video.Builder video = Video.newBuilder();
+        // TODO check the database for videos info
         video.setName(name);
         Seeder seeder = null;
         try {
