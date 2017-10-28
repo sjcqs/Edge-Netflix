@@ -16,23 +16,29 @@ import java.util.Arrays;
  */
 public class Client {
 
-    public static void main(String[] argv){
+    public static void main(String[] args){
+        if (args.length != 1){
+            System.err.println("You need to specify the address of the portal");
+            System.exit(-1);
+        }
+        //http://35.195.238.86
+        String url = args[0];
         RequestManager requestManager = null;
         try {
-            requestManager = new RequestManager("http://35.195.238.86",8080);
+            requestManager = new RequestManager("http://" + url,8080);
             requestManager.start();
+            HelpCommand.printHelp(true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
             boolean stop = false;
-            HelpCommand.printHelp(true);
 
             System.out.print("> ");
             String input;
             while (!stop){
                 input = reader.readLine();
                 if (input != null) {
-                    String[] args = input.split("\\s");
+                    String[] arguments = input.split("\\s");
                     try {
-                        CommandParser.parse(Arrays.asList(args))
+                        CommandParser.parse(Arrays.asList(arguments))
                                 .run(requestManager);
                     } catch (IllegalArgumentException e) {
                         System.out.println();

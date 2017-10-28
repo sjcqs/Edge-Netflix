@@ -1,7 +1,11 @@
 package portal.rest;
 
+import portal.seeder.SeederFactoryClient;
+import route.Seeder;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by satyan on 10/7/17.
@@ -9,6 +13,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("seeder")
 public class SeederRequest {
+    private SeederFactoryClient factoryClient = SeederFactoryClient.getInstance();
 
     // putting a param using query
     @GET
@@ -16,18 +21,15 @@ public class SeederRequest {
     @Produces(MediaType.TEXT_PLAIN)
     public String getSeederList(@QueryParam("keywords") String keywords) {
         if(keywords == null){
-            return listSeeders();
+            keywords = "";
         }
-        else
-            return searchSeeders(keywords);
-    }
 
-    private String searchSeeders(String name) {
-        return getClass().getName() + ", keywords: "+ name;
-    }
+        List<Seeder> seeders = factoryClient.listSeeders(keywords);
+        String listString = "";
+        for (Seeder seeder : seeders) {
+            listString += "+ " + seeder.getName() + ";\n";
+        }
 
-    private String listSeeders() {
-        return getClass().getName();
+        return listString;
     }
-
 }

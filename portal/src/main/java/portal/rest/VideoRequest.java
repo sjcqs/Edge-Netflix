@@ -1,5 +1,7 @@
 package portal.rest;
 
+import portal.seeder.SeederFactoryClient;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -12,12 +14,13 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("video")
 public class VideoRequest {
+    private SeederFactoryClient factoryClient = SeederFactoryClient.getInstance();
+
     @GET
     @Path("download")
     @Produces(MediaType.TEXT_PLAIN)
     public String downloadFile(@QueryParam("name") String name) {
-        // TODO: return the resources used to download the file (.torrent file/seeder/ whatever)
-        return VideoRequest.class.getName() + " DOWNLOAD " + name;
+        return VideoRequest.class.getName() + " DOWNLOAD " + factoryClient.createSeeder(name);
     }
 
     @GET
