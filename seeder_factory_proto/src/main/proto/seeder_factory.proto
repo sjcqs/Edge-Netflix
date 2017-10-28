@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "route";
+option java_outer_classname = "SeederFactoryProto";
+option objc_class_prefix = "RTG";
+
+package route;
+
+service SeederFactory{
+    // Portal -> SeederFactory
+    // Ask to create the seeder for the given video and returns the created seeder in return
+    rpc CreateSeeder(Video) returns (Seeder) {}
+
+    // Send the list of seeders
+    rpc ListSeeders(ListQuery) returns (stream Seeder) {}
+}
+
+message ListQuery{
+    repeated string keyword = 1;
+}
+
+message Size{
+    int32 width = 1;
+    int32 height = 2;
+}
+
+message Video {
+    string name = 1;
+    Size size = 2;
+    int32 bitrate = 3;
+    repeated string keyword = 4;
+}
+
+message Endpoint{
+    string transport = 1;
+    string ip = 2;
+    int32 port = 3;
+}
+
+message Seeder {
+    Video video = 1;
+    Endpoint endpoint = 2;
+}
