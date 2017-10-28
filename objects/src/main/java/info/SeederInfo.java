@@ -17,10 +17,14 @@ public class SeederInfo {
         this.endpoint = endpoint;
     }
 
+    public String getJSON(){
+        Gson gson = new Gson();
+        return  gson.toJson(this, this.getClass());
+    }
+
     public static String getJSON(SeederInfo info){
         Gson gson = new Gson();
-        String json = gson.toJson(info, SeederInfo.class);
-        return json;
+        return gson.toJson(info, SeederInfo.class);
     }
 
     public static void main(String[] args){
@@ -28,10 +32,12 @@ public class SeederInfo {
                 new VideoInfo("film1", "300x400", 30, new ArrayList<>()),
                 new Endpoint("127.0.0.1", 8000));
         System.out.println(getJSON(info));
+        System.out.println(info.getJSON());
     }
 
-    public static String getJSON(List<SeederInfo> info){
-        return null;
+    public static String getJSON(List<SeederInfo> infos){
+        Gson gson = new Gson();
+        return gson.toJson(infos, SeederInfo.class);
     }
 
 }
