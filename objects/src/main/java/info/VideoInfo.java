@@ -1,19 +1,31 @@
 package info;
 
+import route.Size;
+import route.Video;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class VideoInfo {
+public class VideoInfo implements RPCConvertible<Video> {
     private String name;
     private String size;
     private int bitrate;
-    private List<String> keywordsList = new ArrayList<String>();
+    private List<String> keywords = new ArrayList<String>();
 
     public VideoInfo(String name, String size, int bitrate, List<String> keywordsList) {
         this.name = name;
         this.size = size;
         this.bitrate = bitrate;
-        this.keywordsList = keywordsList;
+        this.keywords = keywordsList;
+    }
+
+    public VideoInfo(Video video){
+        this.name = video.getName();
+        Size size = video.getSize();
+        this.size = size.getWidth() + "x" + size.getHeight();
+        this.bitrate = video.getBitrate();
+        this.keywords = new LinkedList<String>(video.getKeywordList());
     }
 
     public String getName() {
@@ -40,12 +52,12 @@ public class VideoInfo {
         this.bitrate = bitrate;
     }
 
-    public List<String> getKeywordsList() {
-        return keywordsList;
+    public List<String> getKeywords() {
+        return keywords;
     }
 
-    public void setKeywordsList(List<String> keywordsList) {
-        this.keywordsList = keywordsList;
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
     }
 
 
@@ -59,6 +71,21 @@ public class VideoInfo {
         if(!(bitrate>0)){
             throw new IllegalArgumentException("Invalid bitrate");
         }
+    }
+
+    public Video convert(){
+        Video.Builder builder = Video.newBuilder();
+
+        builder.setName(name);
+        builder.setBitrate(bitrate);
+        builder.addAllKeyword(keywords);
+        int width, height;
+        String[] sizes = size.split("x");
+        width = Integer.valueOf(sizes[0]);
+        height = Integer.valueOf(sizes[1]);
+        builder.setSize(Size.newBuilder().setWidth(width).setHeight(height).build());
+
+        return builder.build();
     }
 
 }

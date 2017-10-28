@@ -2,8 +2,12 @@ package client.cli.command;
 
 import client.RequestManager;
 import client.cli.Command;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import info.SeederInfo;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.util.URIUtil;
+import route.Seeder;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import java.io.UnsupportedEncodingException;
@@ -38,6 +42,11 @@ public class DownloadFileCommand extends Command {
         }
         query = URLEncoder.encode(query,"UTF-8");
         ContentResponse response = manager.sendRequest(ADDRESS + "?name=" + query);
-        System.out.println(response.getContentAsString());
+        String json = response.getContentAsString();
+        Gson gson = new Gson();
+        SeederInfo seederInfo = SeederInfo.deserialize(json);
+        // TODO do stuff with seeder info
+        System.out.println(json);
+
     }
 }

@@ -2,9 +2,9 @@ package info;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Endpoint {
+public class Endpoint implements RPCConvertible<route.Endpoint> {
     @SerializedName("transport")
-    private final String transport = "tcp";
+    private String transport = "tcp";
     @SerializedName("ip")
     private String ip;
     @SerializedName("port")
@@ -18,6 +18,12 @@ public class Endpoint {
         }
     }
 
+    public Endpoint(route.Endpoint endpoint) {
+        this.ip = endpoint.getIp();
+        this.transport = endpoint.getTransport();
+        this.port = endpoint.getPort();
+    }
+
     public String getTransport() {
         return transport;
     }
@@ -28,5 +34,13 @@ public class Endpoint {
 
     public int getPort() {
         return port;
+    }
+
+    public route.Endpoint convert() {
+        return route.Endpoint.newBuilder()
+                .setTransport(transport)
+                .setIp(ip)
+                .setPort(port)
+                .build();
     }
 }
