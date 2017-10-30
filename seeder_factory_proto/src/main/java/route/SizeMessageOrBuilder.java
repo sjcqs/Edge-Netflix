@@ -3,8 +3,8 @@
 
 package route;
 
-public interface SizeOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:route.Size)
+public interface SizeMessageOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:route.SizeMessage)
     com.google.protobuf.MessageOrBuilder {
 
   /**

@@ -1,12 +1,11 @@
 package portal.seeder;
 
+import model.Seeder;
+import model.Video;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
-import route.ListQuery;
-import route.Seeder;
-import route.SeederFactoryGrpc;
-import route.Video;
+import route.*;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -36,22 +35,30 @@ public class SeederFactoryClient {
     }
 
     public Seeder createSeeder(String name){
-        Video.Builder video = Video.newBuilder();
         // TODO check the database for videos info
-        video.setName(name);
-        Seeder seeder = null;
+        List<String> keywords = new LinkedList<>();
+        keywords.add("test0");
+        keywords.add("test1");
+        keywords.add("test2");
+        Video video = new Video(
+                name,
+                "128x128",
+                144,
+                keywords
+        );
+        SeederMessage seederMessage = null;
         try {
-            seeder = blockingStub.createSeeder(video.build());
+            seederMessage = blockingStub.createSeeder(video.convert());
         } catch (StatusRuntimeException ex){
             logger.log(Level.WARNING,ex.getMessage());
         }
 
-        return seeder;
+        return new Seeder(seederMessage);
     }
 
     public List<Seeder> listSeeders(String[] keywords){
-        List<Seeder> seeders = new LinkedList<>();
-        ListQuery.Builder builder = ListQuery.newBuilder();
+        List<SeederMessage> seederMessages = new LinkedList<>();
+        KeywordsMessage.Builder builder = KeywordsMessage.newBuilder();
 
         if (keywords != null) {
             for (String keyword : keywords) {
@@ -60,16 +67,21 @@ public class SeederFactoryClient {
         }
 
         try {
-            Iterator<Seeder> it = blockingStub.listSeeders(builder.build());
+            Iterator<SeederMessage> it = blockingStub.listSeeders(builder.build());
             while (it.hasNext()){
-                Seeder seeder = it.next();
-                seeders.add(seeder);
+                SeederMessage seederMessage = it.next();
+                seederMessages.add(seederMessage);
             }
         } catch (StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
             return null;
         }
 
-        return seeders;
+        List<Seeder> seederInfos = new LinkedList<>();
+        for (SeederMessage seederMessage : seederMessages) {
+            seederInfos.add(new Seeder(seederMessage));
+        }
+
+        return seederInfos;
     }
 }

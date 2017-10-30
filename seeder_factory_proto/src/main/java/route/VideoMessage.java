@@ -4,18 +4,18 @@
 package route;
 
 /**
- * Protobuf type {@code route.Video}
+ * Protobuf type {@code route.VideoMessage}
  */
-public  final class Video extends
+public  final class VideoMessage extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:route.Video)
-    VideoOrBuilder {
+    // @@protoc_insertion_point(message_implements:route.VideoMessage)
+    VideoMessageOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use Video.newBuilder() to construct.
-  private Video(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use VideoMessage.newBuilder() to construct.
+  private VideoMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private Video() {
+  private VideoMessage() {
     name_ = "";
     bitrate_ = 0;
     keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -26,7 +26,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private Video(
+  private VideoMessage(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -56,11 +56,11 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 18: {
-            route.Size.Builder subBuilder = null;
+            route.SizeMessage.Builder subBuilder = null;
             if (size_ != null) {
               subBuilder = size_.toBuilder();
             }
-            size_ = input.readMessage(route.Size.parser(), extensionRegistry);
+            size_ = input.readMessage(route.SizeMessage.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(size_);
               size_ = subBuilder.buildPartial();
@@ -99,14 +99,14 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return route.SeederFactoryProto.internal_static_route_Video_descriptor;
+    return route.SeederFactoryProto.internal_static_route_VideoMessage_descriptor;
   }
 
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return route.SeederFactoryProto.internal_static_route_Video_fieldAccessorTable
+    return route.SeederFactoryProto.internal_static_route_VideoMessage_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            route.Video.class, route.Video.Builder.class);
+            route.VideoMessage.class, route.VideoMessage.Builder.class);
   }
 
   private int bitField0_;
@@ -145,23 +145,23 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int SIZE_FIELD_NUMBER = 2;
-  private route.Size size_;
+  private route.SizeMessage size_;
   /**
-   * <code>.route.Size size = 2;</code>
+   * <code>.route.SizeMessage size = 2;</code>
    */
   public boolean hasSize() {
     return size_ != null;
   }
   /**
-   * <code>.route.Size size = 2;</code>
+   * <code>.route.SizeMessage size = 2;</code>
    */
-  public route.Size getSize() {
-    return size_ == null ? route.Size.getDefaultInstance() : size_;
+  public route.SizeMessage getSize() {
+    return size_ == null ? route.SizeMessage.getDefaultInstance() : size_;
   }
   /**
-   * <code>.route.Size size = 2;</code>
+   * <code>.route.SizeMessage size = 2;</code>
    */
-  public route.SizeOrBuilder getSizeOrBuilder() {
+  public route.SizeMessageOrBuilder getSizeOrBuilder() {
     return getSize();
   }
 
@@ -264,10 +264,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof route.Video)) {
+    if (!(obj instanceof route.VideoMessage)) {
       return super.equals(obj);
     }
-    route.Video other = (route.Video) obj;
+    route.VideoMessage other = (route.VideoMessage) obj;
 
     boolean result = true;
     result = result && getName()
@@ -309,69 +309,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static route.Video parseFrom(byte[] data)
+  public static route.VideoMessage parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static route.Video parseFrom(java.io.InputStream input)
+  public static route.VideoMessage parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static route.Video parseDelimitedFrom(java.io.InputStream input)
+  public static route.VideoMessage parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static route.Video parseDelimitedFrom(
+  public static route.VideoMessage parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static route.Video parseFrom(
+  public static route.VideoMessage parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -383,7 +383,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(route.Video prototype) {
+  public static Builder newBuilder(route.VideoMessage prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -398,25 +398,25 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code route.Video}
+   * Protobuf type {@code route.VideoMessage}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:route.Video)
-      route.VideoOrBuilder {
+      // @@protoc_insertion_point(builder_implements:route.VideoMessage)
+      route.VideoMessageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return route.SeederFactoryProto.internal_static_route_Video_descriptor;
+      return route.SeederFactoryProto.internal_static_route_VideoMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return route.SeederFactoryProto.internal_static_route_Video_fieldAccessorTable
+      return route.SeederFactoryProto.internal_static_route_VideoMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              route.Video.class, route.Video.Builder.class);
+              route.VideoMessage.class, route.VideoMessage.Builder.class);
     }
 
-    // Construct using route.Video.newBuilder()
+    // Construct using route.VideoMessage.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -450,23 +450,23 @@ private static final long serialVersionUID = 0L;
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return route.SeederFactoryProto.internal_static_route_Video_descriptor;
+      return route.SeederFactoryProto.internal_static_route_VideoMessage_descriptor;
     }
 
-    public route.Video getDefaultInstanceForType() {
-      return route.Video.getDefaultInstance();
+    public route.VideoMessage getDefaultInstanceForType() {
+      return route.VideoMessage.getDefaultInstance();
     }
 
-    public route.Video build() {
-      route.Video result = buildPartial();
+    public route.VideoMessage build() {
+      route.VideoMessage result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public route.Video buildPartial() {
-      route.Video result = new route.Video(this);
+    public route.VideoMessage buildPartial() {
+      route.VideoMessage result = new route.VideoMessage(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.name_ = name_;
@@ -513,16 +513,16 @@ private static final long serialVersionUID = 0L;
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof route.Video) {
-        return mergeFrom((route.Video)other);
+      if (other instanceof route.VideoMessage) {
+        return mergeFrom((route.VideoMessage)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(route.Video other) {
-      if (other == route.Video.getDefaultInstance()) return this;
+    public Builder mergeFrom(route.VideoMessage other) {
+      if (other == route.VideoMessage.getDefaultInstance()) return this;
       if (!other.getName().isEmpty()) {
         name_ = other.name_;
         onChanged();
@@ -556,11 +556,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      route.Video parsedMessage = null;
+      route.VideoMessage parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (route.Video) e.getUnfinishedMessage();
+        parsedMessage = (route.VideoMessage) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -640,29 +640,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private route.Size size_ = null;
+    private route.SizeMessage size_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
-        route.Size, route.Size.Builder, route.SizeOrBuilder> sizeBuilder_;
+        route.SizeMessage, route.SizeMessage.Builder, route.SizeMessageOrBuilder> sizeBuilder_;
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
     public boolean hasSize() {
       return sizeBuilder_ != null || size_ != null;
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
-    public route.Size getSize() {
+    public route.SizeMessage getSize() {
       if (sizeBuilder_ == null) {
-        return size_ == null ? route.Size.getDefaultInstance() : size_;
+        return size_ == null ? route.SizeMessage.getDefaultInstance() : size_;
       } else {
         return sizeBuilder_.getMessage();
       }
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
-    public Builder setSize(route.Size value) {
+    public Builder setSize(route.SizeMessage value) {
       if (sizeBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -676,10 +676,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
     public Builder setSize(
-        route.Size.Builder builderForValue) {
+        route.SizeMessage.Builder builderForValue) {
       if (sizeBuilder_ == null) {
         size_ = builderForValue.build();
         onChanged();
@@ -690,13 +690,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
-    public Builder mergeSize(route.Size value) {
+    public Builder mergeSize(route.SizeMessage value) {
       if (sizeBuilder_ == null) {
         if (size_ != null) {
           size_ =
-            route.Size.newBuilder(size_).mergeFrom(value).buildPartial();
+            route.SizeMessage.newBuilder(size_).mergeFrom(value).buildPartial();
         } else {
           size_ = value;
         }
@@ -708,7 +708,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
     public Builder clearSize() {
       if (sizeBuilder_ == null) {
@@ -722,33 +722,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
-    public route.Size.Builder getSizeBuilder() {
+    public route.SizeMessage.Builder getSizeBuilder() {
       
       onChanged();
       return getSizeFieldBuilder().getBuilder();
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
-    public route.SizeOrBuilder getSizeOrBuilder() {
+    public route.SizeMessageOrBuilder getSizeOrBuilder() {
       if (sizeBuilder_ != null) {
         return sizeBuilder_.getMessageOrBuilder();
       } else {
         return size_ == null ?
-            route.Size.getDefaultInstance() : size_;
+            route.SizeMessage.getDefaultInstance() : size_;
       }
     }
     /**
-     * <code>.route.Size size = 2;</code>
+     * <code>.route.SizeMessage size = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        route.Size, route.Size.Builder, route.SizeOrBuilder> 
+        route.SizeMessage, route.SizeMessage.Builder, route.SizeMessageOrBuilder> 
         getSizeFieldBuilder() {
       if (sizeBuilder_ == null) {
         sizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            route.Size, route.Size.Builder, route.SizeOrBuilder>(
+            route.SizeMessage, route.SizeMessage.Builder, route.SizeMessageOrBuilder>(
                 getSize(),
                 getParentForChildren(),
                 isClean());
@@ -887,39 +887,39 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:route.Video)
+    // @@protoc_insertion_point(builder_scope:route.VideoMessage)
   }
 
-  // @@protoc_insertion_point(class_scope:route.Video)
-  private static final route.Video DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:route.VideoMessage)
+  private static final route.VideoMessage DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new route.Video();
+    DEFAULT_INSTANCE = new route.VideoMessage();
   }
 
-  public static route.Video getDefaultInstance() {
+  public static route.VideoMessage getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<Video>
-      PARSER = new com.google.protobuf.AbstractParser<Video>() {
-    public Video parsePartialFrom(
+  private static final com.google.protobuf.Parser<VideoMessage>
+      PARSER = new com.google.protobuf.AbstractParser<VideoMessage>() {
+    public VideoMessage parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Video(input, extensionRegistry);
+        return new VideoMessage(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<Video> parser() {
+  public static com.google.protobuf.Parser<VideoMessage> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<Video> getParserForType() {
+  public com.google.protobuf.Parser<VideoMessage> getParserForType() {
     return PARSER;
   }
 
-  public route.Video getDefaultInstanceForType() {
+  public route.VideoMessage getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

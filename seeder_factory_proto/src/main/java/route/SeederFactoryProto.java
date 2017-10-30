@@ -15,30 +15,30 @@ public final class SeederFactoryProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_route_ListQuery_descriptor;
+    internal_static_route_KeywordsMessage_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_route_ListQuery_fieldAccessorTable;
+      internal_static_route_KeywordsMessage_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_route_Size_descriptor;
+    internal_static_route_SizeMessage_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_route_Size_fieldAccessorTable;
+      internal_static_route_SizeMessage_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_route_Video_descriptor;
+    internal_static_route_VideoMessage_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_route_Video_fieldAccessorTable;
+      internal_static_route_VideoMessage_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_route_Endpoint_descriptor;
+    internal_static_route_EndpointMessage_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_route_Endpoint_fieldAccessorTable;
+      internal_static_route_EndpointMessage_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_route_Seeder_descriptor;
+    internal_static_route_SeederMessage_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_route_Seeder_fieldAccessorTable;
+      internal_static_route_SeederMessage_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -49,18 +49,20 @@ public final class SeederFactoryProto {
   static {
     java.lang.String[] descriptorData = {
       "\n#src/main/proto/seeder_factory.proto\022\005r" +
-      "oute\"\034\n\tListQuery\022\017\n\007keyword\030\001 \003(\t\"%\n\004Si" +
-      "ze\022\r\n\005width\030\001 \001(\005\022\016\n\006height\030\002 \001(\005\"R\n\005Vid" +
-      "eo\022\014\n\004name\030\001 \001(\t\022\031\n\004size\030\002 \001(\0132\013.route.S" +
-      "ize\022\017\n\007bitrate\030\003 \001(\005\022\017\n\007keyword\030\004 \003(\t\"7\n" +
-      "\010Endpoint\022\021\n\ttransport\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t" +
-      "\022\014\n\004port\030\003 \001(\005\"H\n\006Seeder\022\033\n\005video\030\001 \001(\0132" +
-      "\014.route.Video\022!\n\010endpoint\030\002 \001(\0132\017.route." +
-      "Endpoint2r\n\rSeederFactory\022-\n\014CreateSeede" +
-      "r\022\014.route.Video\032\r.route.Seeder\"\000\0222\n\013List",
-      "Seeders\022\020.route.ListQuery\032\r.route.Seeder" +
-      "\"\0000\001B#\n\005routeB\022SeederFactoryProtoP\001\242\002\003RT" +
-      "Gb\006proto3"
+      "oute\"\"\n\017KeywordsMessage\022\017\n\007keyword\030\001 \003(\t" +
+      "\",\n\013SizeMessage\022\r\n\005width\030\001 \001(\005\022\016\n\006height" +
+      "\030\002 \001(\005\"`\n\014VideoMessage\022\014\n\004name\030\001 \001(\t\022 \n\004" +
+      "size\030\002 \001(\0132\022.route.SizeMessage\022\017\n\007bitrat" +
+      "e\030\003 \001(\005\022\017\n\007keyword\030\004 \003(\t\">\n\017EndpointMess" +
+      "age\022\021\n\ttransport\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t\022\014\n\004po" +
+      "rt\030\003 \001(\005\"]\n\rSeederMessage\022\"\n\005video\030\001 \001(\013" +
+      "2\023.route.VideoMessage\022(\n\010endpoint\030\002 \001(\0132" +
+      "\026.route.EndpointMessage2\215\001\n\rSeederFactor",
+      "y\022;\n\014CreateSeeder\022\023.route.VideoMessage\032\024" +
+      ".route.SeederMessage\"\000\022?\n\013ListSeeders\022\026." +
+      "route.KeywordsMessage\032\024.route.SeederMess" +
+      "age\"\0000\001B#\n\005routeB\022SeederFactoryProtoP\001\242\002" +
+      "\003RTGb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -74,35 +76,35 @@ public final class SeederFactoryProto {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_route_ListQuery_descriptor =
+    internal_static_route_KeywordsMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_route_ListQuery_fieldAccessorTable = new
+    internal_static_route_KeywordsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_route_ListQuery_descriptor,
+        internal_static_route_KeywordsMessage_descriptor,
         new java.lang.String[] { "Keyword", });
-    internal_static_route_Size_descriptor =
+    internal_static_route_SizeMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_route_Size_fieldAccessorTable = new
+    internal_static_route_SizeMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_route_Size_descriptor,
+        internal_static_route_SizeMessage_descriptor,
         new java.lang.String[] { "Width", "Height", });
-    internal_static_route_Video_descriptor =
+    internal_static_route_VideoMessage_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_route_Video_fieldAccessorTable = new
+    internal_static_route_VideoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_route_Video_descriptor,
+        internal_static_route_VideoMessage_descriptor,
         new java.lang.String[] { "Name", "Size", "Bitrate", "Keyword", });
-    internal_static_route_Endpoint_descriptor =
+    internal_static_route_EndpointMessage_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_route_Endpoint_fieldAccessorTable = new
+    internal_static_route_EndpointMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_route_Endpoint_descriptor,
+        internal_static_route_EndpointMessage_descriptor,
         new java.lang.String[] { "Transport", "Ip", "Port", });
-    internal_static_route_Seeder_descriptor =
+    internal_static_route_SeederMessage_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_route_Seeder_fieldAccessorTable = new
+    internal_static_route_SeederMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_route_Seeder_descriptor,
+        internal_static_route_SeederMessage_descriptor,
         new java.lang.String[] { "Video", "Endpoint", });
   }
 

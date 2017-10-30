@@ -3,8 +3,8 @@
 
 package route;
 
-public interface EndpointOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:route.Endpoint)
+public interface EndpointMessageOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:route.EndpointMessage)
     com.google.protobuf.MessageOrBuilder {
 
   /**

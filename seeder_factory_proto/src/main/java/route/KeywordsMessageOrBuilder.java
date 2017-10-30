@@ -3,8 +3,8 @@
 
 package route;
 
-public interface ListQueryOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:route.ListQuery)
+public interface KeywordsMessageOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:route.KeywordsMessage)
     com.google.protobuf.MessageOrBuilder {
 
   /**

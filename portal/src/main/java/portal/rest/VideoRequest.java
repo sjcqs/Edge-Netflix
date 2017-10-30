@@ -1,5 +1,6 @@
 package portal.rest;
 
+import model.Seeder;
 import portal.seeder.SeederFactoryClient;
 
 import javax.ws.rs.GET;
@@ -20,7 +21,9 @@ public class VideoRequest {
     @Path("download")
     @Produces(MediaType.TEXT_PLAIN)
     public String downloadFile(@QueryParam("name") String name) {
-        return VideoRequest.class.getName() + " DOWNLOAD " + factoryClient.createSeeder(name);
+        // TODO replace the return value by a SeederMessage json
+        Seeder seeder = factoryClient.createSeeder(name);
+        return seeder.getJSON();
     }
 
     @GET
