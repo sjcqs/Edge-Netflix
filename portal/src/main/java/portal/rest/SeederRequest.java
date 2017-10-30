@@ -1,6 +1,6 @@
 package portal.rest;
 
-import info.SeederInfo;
+import model.Seeder;
 import portal.seeder.SeederFactoryClient;
 
 import javax.ws.rs.GET;
@@ -32,12 +32,12 @@ public class SeederRequest {
             strings = keywords.split("\\s");
         }
 
-        List<SeederInfo> seeders = factoryClient.listSeeders(strings);
+        List<Seeder> seeders = factoryClient.listSeeders(strings);
         if (seeders.isEmpty()){
             return "No seeders";
         }
         String listString = "";
-        for (SeederInfo seeder : seeders) {
+        for (Seeder seeder : seeders) {
             listString += "+ " + seeder + ";\n";
         }
 
