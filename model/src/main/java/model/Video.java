@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.annotations.SerializedName;
 import route.SizeMessage;
 import route.VideoMessage;
 
@@ -10,28 +11,35 @@ import java.util.List;
 public class Video implements Convertible<VideoMessage> {
     private String name;
     private String size;
-    private int bitrate;
+    @SerializedName("bit_rate")
+    private int bitRate;
     private String directory;
     private List<String> keywords = new ArrayList<>();
+    private double duration = 0d;
 
-    public Video(String name, String directory, String size, int bitrate, List<String> keywords){
+    public Video(String name, String directory, String size, int bitRate, List<String> keywords){
         this.name = name;
         this.directory = directory;
         this.keywords = keywords;
-        this.bitrate = bitrate;
+        this.bitRate = bitRate;
         this.size = size;
     }
 
-    public Video(String name, String size, int bitrate, List<String> keywordsList) {
-        this(name,"",size,bitrate, keywordsList);
+    public Video(String name, String size, int bitRate, List<String> keywordsList) {
+        this(name,"",size, bitRate, keywordsList);
     }
 
     public Video(VideoMessage videoMessage){
         this.name = videoMessage.getName();
         SizeMessage size = videoMessage.getSize();
         this.size = size.getWidth() + "x" + size.getHeight();
-        this.bitrate = videoMessage.getBitrate();
+        this.bitRate = videoMessage.getBitrate();
         this.keywords = new LinkedList<>(videoMessage.getKeywordList());
+    }
+
+    public Video(String name, String directory, String size, int bitRate, double duration) {
+        this(name,directory,size, bitRate,null);
+        this.duration = duration;
     }
 
     public String getDirectory() {
@@ -46,8 +54,12 @@ public class Video implements Convertible<VideoMessage> {
         return size;
     }
 
-    public int getBitrate() {
-        return bitrate;
+    public int getBitRate() {
+        return bitRate;
+    }
+
+    public double getDuration() {
+        return duration;
     }
 
     public List<String> getKeywords() {
@@ -58,7 +70,7 @@ public class Video implements Convertible<VideoMessage> {
         VideoMessage.Builder builder = VideoMessage.newBuilder();
 
         builder.setName(name);
-        builder.setBitrate(bitrate);
+        builder.setBitrate(bitRate);
         builder.addAllKeyword(keywords);
         int width, height;
         String[] sizes = size.split("x");
@@ -67,5 +79,12 @@ public class Video implements Convertible<VideoMessage> {
         builder.setSize(SizeMessage.newBuilder().setWidth(width).setHeight(height).build());
 
         return builder.build();
+    }
+
+    public String getFormattedDuration() {
+        double dur = getDuration();
+        int min = (int) (dur / 60);
+        int sec = (int) dur % 60;
+        return min + " min " + sec + " sec";
     }
 }
