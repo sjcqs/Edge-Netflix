@@ -4,10 +4,11 @@ package seeder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import route.Endpoint;
-import route.Seeder;
+import route.EndpointMessage;
+import route.KeywordsMessage;
 import route.SeederFactoryGrpc.SeederFactoryImplBase;
-import route.Video;
+import route.SeederMessage;
+import route.VideoMessage;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * Created by satyan on 10/25/17.
  * The SeederFactory
  */
-public class SeederFactory {
+class SeederFactory {
     private static final Logger logger = Logger.getLogger(SeederFactory.class.getName());
 
     private final int port;
@@ -27,18 +28,18 @@ public class SeederFactory {
 
 
     /** Create a RouteGuide server listening on {@code port} using {@code featureFile} database. */
-    public SeederFactory(int port) throws IOException {
+    SeederFactory(int port) throws IOException {
         this(ServerBuilder.forPort(port), port);
     }
 
     /** Create a RouteGuide server using serverBuilder as a base and features as data. */
-    public SeederFactory(ServerBuilder<?> serverBuilder, int port) {
+    private SeederFactory(ServerBuilder<?> serverBuilder, int port) {
         this.port = port;
         server = serverBuilder.addService(new SeederFactoryService()).build();
     }
 
     /** Start serving requests. */
-    public void start() throws IOException {
+    void start() throws IOException {
         server.start();
         logger.info("Server started, listening on " + port);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -50,7 +51,7 @@ public class SeederFactory {
     }
 
     /** Stop serving requests and shutdown resources. */
-    public void stop() {
+    private void stop() {
         if (server != null) {
             server.shutdown();
         }
@@ -59,51 +60,50 @@ public class SeederFactory {
     /**
      * Await termination on the main thread since the grpc library uses daemon threads.
      */
-    public void blockUntilShutdown() throws InterruptedException {
+    void blockUntilShutdown() throws InterruptedException {
         if (server != null) {
             server.awaitTermination();
         }
     }
 
-
     private static class SeederFactoryService extends SeederFactoryImplBase{
-        private final List<Seeder> seeders = new LinkedList<>();
+        private final List<SeederMessage> seederMessages = new LinkedList<>();
 
         @Override
-        public void createSeeder(Video request, StreamObserver<Seeder> responseObserver) {
-            // TODO create a new seeder and add the real port
-            Seeder.Builder builder = Seeder.newBuilder();
-            Endpoint.Builder endpointBuilder = Endpoint.newBuilder();
+        public void createSeeder(VideoMessage request, StreamObserver<SeederMessage> responseObserver) {
+            // TODO create a new seederMessage and add the real port
+            SeederMessage.Builder builder = SeederMessage.newBuilder();
+            EndpointMessage.Builder endpointBuilder = EndpointMessage.newBuilder();
             endpointBuilder.setIp("localhost");
             endpointBuilder.setPort(1002);
             endpointBuilder.setTransport("tcp");
             builder.setVideo(request);
             builder.setEndpoint(endpointBuilder.build());
 
-            Seeder seeder = builder.build();
-            seeders.add(seeder);
-            responseObserver.onNext(seeder);
+            SeederMessage seederMessage = builder.build();
+            seederMessages.add(seederMessage);
+            responseObserver.onNext(seederMessage);
             responseObserver.onCompleted();
         }
 
         @Override
-        public void listSeeders(route.ListQuery request, StreamObserver<Seeder> responseObserver) {
+        public void listSeeders(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
             List<String> keywords = request.getKeywordList();
             if (request.getKeywordCount() == 0){
-                for(Seeder seeder : seeders) {
-                    responseObserver.onNext(seeder);
+                for(SeederMessage seederMessage : seederMessages) {
+                    responseObserver.onNext(seederMessage);
                 }
             } else {
                 // Check if a keyword or the video name is matching
-                for(Seeder seeder : seeders) {
+                for(SeederMessage seederMessage : seederMessages) {
                     for (String keyword : keywords) {
-                        Video video = seeder.getVideo();
-                        logger.log(Level.INFO, video.getName() + " : " + keyword);
+                        VideoMessage videoMessage = seederMessage.getVideo();
+                        logger.log(Level.INFO, videoMessage.getName() + " : " + keyword);
                         boolean send = false;
-                        if (video.getName().contains(keyword)) {
+                        if (videoMessage.getName().contains(keyword)) {
                             send = true;
                         } else {
-                            for (String str : video.getKeywordList()) {
+                            for (String str : videoMessage.getKeywordList()) {
                                 if (str.equals(keyword)) {
                                     send = true;
                                     break;
@@ -111,7 +111,7 @@ public class SeederFactory {
                             }
                         }
                         if (send) {
-                            responseObserver.onNext(seeder);
+                            responseObserver.onNext(seederMessage);
                         }
                     }
                 }

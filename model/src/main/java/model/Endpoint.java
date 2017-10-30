@@ -1,10 +1,11 @@
-package info;
+package model;
 
 import com.google.gson.annotations.SerializedName;
+import route.EndpointMessage;
 
-public class Endpoint {
+public class Endpoint implements Convertible<EndpointMessage> {
     @SerializedName("transport")
-    private final String transport = "tcp";
+    private String transport = "tcp";
     @SerializedName("ip")
     private String ip;
     @SerializedName("port")
@@ -18,6 +19,12 @@ public class Endpoint {
         }
     }
 
+    public Endpoint(EndpointMessage endpointMessage) {
+        this.ip = endpointMessage.getIp();
+        this.transport = endpointMessage.getTransport();
+        this.port = endpointMessage.getPort();
+    }
+
     public String getTransport() {
         return transport;
     }
@@ -28,5 +35,13 @@ public class Endpoint {
 
     public int getPort() {
         return port;
+    }
+
+    public EndpointMessage convert() {
+        return EndpointMessage.newBuilder()
+                .setTransport(transport)
+                .setIp(ip)
+                .setPort(port)
+                .build();
     }
 }

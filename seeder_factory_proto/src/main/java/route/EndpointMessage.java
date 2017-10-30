@@ -4,18 +4,18 @@
 package route;
 
 /**
- * Protobuf type {@code route.Endpoint}
+ * Protobuf type {@code route.EndpointMessage}
  */
-public  final class Endpoint extends
+public  final class EndpointMessage extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:route.Endpoint)
-    EndpointOrBuilder {
+    // @@protoc_insertion_point(message_implements:route.EndpointMessage)
+    EndpointMessageOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use Endpoint.newBuilder() to construct.
-  private Endpoint(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use EndpointMessage.newBuilder() to construct.
+  private EndpointMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private Endpoint() {
+  private EndpointMessage() {
     transport_ = "";
     ip_ = "";
     port_ = 0;
@@ -26,7 +26,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private Endpoint(
+  private EndpointMessage(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -80,14 +80,14 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return route.SeederFactoryProto.internal_static_route_Endpoint_descriptor;
+    return route.SeederFactoryProto.internal_static_route_EndpointMessage_descriptor;
   }
 
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return route.SeederFactoryProto.internal_static_route_Endpoint_fieldAccessorTable
+    return route.SeederFactoryProto.internal_static_route_EndpointMessage_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            route.Endpoint.class, route.Endpoint.Builder.class);
+            route.EndpointMessage.class, route.EndpointMessage.Builder.class);
   }
 
   public static final int TRANSPORT_FIELD_NUMBER = 1;
@@ -216,10 +216,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof route.Endpoint)) {
+    if (!(obj instanceof route.EndpointMessage)) {
       return super.equals(obj);
     }
-    route.Endpoint other = (route.Endpoint) obj;
+    route.EndpointMessage other = (route.EndpointMessage) obj;
 
     boolean result = true;
     result = result && getTransport()
@@ -250,69 +250,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static route.Endpoint parseFrom(byte[] data)
+  public static route.EndpointMessage parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static route.Endpoint parseFrom(java.io.InputStream input)
+  public static route.EndpointMessage parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static route.Endpoint parseDelimitedFrom(java.io.InputStream input)
+  public static route.EndpointMessage parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static route.Endpoint parseDelimitedFrom(
+  public static route.EndpointMessage parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static route.Endpoint parseFrom(
+  public static route.EndpointMessage parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -324,7 +324,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(route.Endpoint prototype) {
+  public static Builder newBuilder(route.EndpointMessage prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -339,25 +339,25 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code route.Endpoint}
+   * Protobuf type {@code route.EndpointMessage}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:route.Endpoint)
-      route.EndpointOrBuilder {
+      // @@protoc_insertion_point(builder_implements:route.EndpointMessage)
+      route.EndpointMessageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return route.SeederFactoryProto.internal_static_route_Endpoint_descriptor;
+      return route.SeederFactoryProto.internal_static_route_EndpointMessage_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return route.SeederFactoryProto.internal_static_route_Endpoint_fieldAccessorTable
+      return route.SeederFactoryProto.internal_static_route_EndpointMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              route.Endpoint.class, route.Endpoint.Builder.class);
+              route.EndpointMessage.class, route.EndpointMessage.Builder.class);
     }
 
-    // Construct using route.Endpoint.newBuilder()
+    // Construct using route.EndpointMessage.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -385,23 +385,23 @@ private static final long serialVersionUID = 0L;
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return route.SeederFactoryProto.internal_static_route_Endpoint_descriptor;
+      return route.SeederFactoryProto.internal_static_route_EndpointMessage_descriptor;
     }
 
-    public route.Endpoint getDefaultInstanceForType() {
-      return route.Endpoint.getDefaultInstance();
+    public route.EndpointMessage getDefaultInstanceForType() {
+      return route.EndpointMessage.getDefaultInstance();
     }
 
-    public route.Endpoint build() {
-      route.Endpoint result = buildPartial();
+    public route.EndpointMessage build() {
+      route.EndpointMessage result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public route.Endpoint buildPartial() {
-      route.Endpoint result = new route.Endpoint(this);
+    public route.EndpointMessage buildPartial() {
+      route.EndpointMessage result = new route.EndpointMessage(this);
       result.transport_ = transport_;
       result.ip_ = ip_;
       result.port_ = port_;
@@ -436,16 +436,16 @@ private static final long serialVersionUID = 0L;
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof route.Endpoint) {
-        return mergeFrom((route.Endpoint)other);
+      if (other instanceof route.EndpointMessage) {
+        return mergeFrom((route.EndpointMessage)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(route.Endpoint other) {
-      if (other == route.Endpoint.getDefaultInstance()) return this;
+    public Builder mergeFrom(route.EndpointMessage other) {
+      if (other == route.EndpointMessage.getDefaultInstance()) return this;
       if (!other.getTransport().isEmpty()) {
         transport_ = other.transport_;
         onChanged();
@@ -470,11 +470,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      route.Endpoint parsedMessage = null;
+      route.EndpointMessage parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (route.Endpoint) e.getUnfinishedMessage();
+        parsedMessage = (route.EndpointMessage) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -658,39 +658,39 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:route.Endpoint)
+    // @@protoc_insertion_point(builder_scope:route.EndpointMessage)
   }
 
-  // @@protoc_insertion_point(class_scope:route.Endpoint)
-  private static final route.Endpoint DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:route.EndpointMessage)
+  private static final route.EndpointMessage DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new route.Endpoint();
+    DEFAULT_INSTANCE = new route.EndpointMessage();
   }
 
-  public static route.Endpoint getDefaultInstance() {
+  public static route.EndpointMessage getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<Endpoint>
-      PARSER = new com.google.protobuf.AbstractParser<Endpoint>() {
-    public Endpoint parsePartialFrom(
+  private static final com.google.protobuf.Parser<EndpointMessage>
+      PARSER = new com.google.protobuf.AbstractParser<EndpointMessage>() {
+    public EndpointMessage parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Endpoint(input, extensionRegistry);
+        return new EndpointMessage(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<Endpoint> parser() {
+  public static com.google.protobuf.Parser<EndpointMessage> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<Endpoint> getParserForType() {
+  public com.google.protobuf.Parser<EndpointMessage> getParserForType() {
     return PARSER;
   }
 
-  public route.Endpoint getDefaultInstanceForType() {
+  public route.EndpointMessage getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -24,7 +24,7 @@ public class CommandParser {
             return new DownloadFileCommand(params);
         } else if (args.size() > 1 && command.equals("list") && args.get(1).equals("files")) {
             return new ListFilesCommand();
-        } else if (command.equals("info")) {
+        } else if (command.equals("model")) {
             return new FileInformationCommand(params);
         } else if (command.equals("play")) {
             return new PlayVideoCommand(params);

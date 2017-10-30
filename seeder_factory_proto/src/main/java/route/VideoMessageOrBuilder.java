@@ -3,8 +3,8 @@
 
 package route;
 
-public interface VideoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:route.Video)
+public interface VideoMessageOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:route.VideoMessage)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -18,17 +18,17 @@ public interface VideoOrBuilder extends
       getNameBytes();
 
   /**
-   * <code>.route.Size size = 2;</code>
+   * <code>.route.SizeMessage size = 2;</code>
    */
   boolean hasSize();
   /**
-   * <code>.route.Size size = 2;</code>
+   * <code>.route.SizeMessage size = 2;</code>
    */
-  route.Size getSize();
+  route.SizeMessage getSize();
   /**
-   * <code>.route.Size size = 2;</code>
+   * <code>.route.SizeMessage size = 2;</code>
    */
-  route.SizeOrBuilder getSizeOrBuilder();
+  route.SizeMessageOrBuilder getSizeOrBuilder();
 
   /**
    * <code>int32 bitrate = 3;</code>

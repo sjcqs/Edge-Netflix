@@ -2,19 +2,19 @@ package client.cli.command;
 
 import client.RequestManager;
 import client.cli.Command;
+import model.Video;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.lang.Object;
-
 /**
  * Created by satyan on 10/8/17.
  * Play a video
  */
 public class PlayVideoCommand extends Command {
+    private final String name;
     public PlayVideoCommand(List<String> args){
         super(args);
         if (args == null || args.isEmpty()){
@@ -25,64 +25,29 @@ public class PlayVideoCommand extends Command {
                             "\tplay VIDEO"
             );
         }
+        String str = "";
+        for (String arg : args) {
+            str += arg + " ";
+        }
+        name = str.substring(0,str.length() - 1);
     }
     @Override
     public void run(RequestManager manager) {
         System.out.println(getClass().getName());
-    }
-
-    public static class Video{
-        private final String name;
-        private final String directory;
-        private final List<String> keywords;
-        private final int bitrate;
-        private final String size;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDirectory() {
-            return directory;
-        }
-
-        public List<String> getKeywords() {
-            return keywords;
-        }
-
-        public int getBitrate() {
-            return bitrate;
-        }
-
-        public String getSize() {
-            return size;
-        }
-
-        public Video(String name, String directory, List<String> keywords, int bitrate, String size){
-            this.name = name;
-            this.directory = directory;
-            this.keywords = keywords;
-            this.bitrate = bitrate;
-            this.size = size;
-        }
-
+        System.out.println(name);
     }
 
     public static void main(String args[]){
+        assert args.length == 1;
         List<String> kw = new ArrayList<>();
         kw.add("Comedy");
-        Video video = new Video("Popeye", "/home/japs/Desktop/PopeyeAliBaba_512kb.mp4", kw, 63, "321x240");
-
+        Video video = new Video("Popeye", args[0], "321x240", 63, kw);
         playVideo(video);
     }
 
-    public static void playVideo(Video video){
-        List<String> cmdlist = new ArrayList<String>();
-        cmdlist.add("man");
-        //cmdlist.add("ffplay https://ia600306.us.archive.org/35/items/PopeyeAliBaba/PopeyeAliBaba_512kb.mp4");
-
+    private static void playVideo(Video video){
         ProcessBuilder pb = new ProcessBuilder("ffplay", video.getDirectory());
-       //ProcessBuilder pb = new ProcessBuilder("ls");
+        //ProcessBuilder pb = new ProcessBuilder("pwd");
         File log = new File("log");
         pb.redirectErrorStream(true);
         pb.redirectOutput(ProcessBuilder.Redirect.appendTo(log));
@@ -94,7 +59,6 @@ public class PlayVideoCommand extends Command {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 

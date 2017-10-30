@@ -10,35 +10,35 @@ package route;
 service SeederFactory{
     // Portal -> SeederFactory
     // Ask to create the seeder for the given video and returns the created seeder in return
-    rpc CreateSeeder(Video) returns (Seeder) {}
+    rpc CreateSeeder(VideoMessage) returns (SeederMessage) {}
 
     // Send the list of seeders
-    rpc ListSeeders(ListQuery) returns (stream Seeder) {}
+    rpc ListSeeders(KeywordsMessage) returns (stream SeederMessage) {}
 }
 
-message ListQuery{
+message KeywordsMessage{
     repeated string keyword = 1;
 }
 
-message Size{
+message SizeMessage{
     int32 width = 1;
     int32 height = 2;
 }
 
-message Video {
+message VideoMessage {
     string name = 1;
-    Size size = 2;
+    SizeMessage size = 2;
     int32 bitrate = 3;
     repeated string keyword = 4;
 }
 
-message Endpoint{
+message EndpointMessage{
     string transport = 1;
     string ip = 2;
     int32 port = 3;
 }
 
-message Seeder {
-    Video video = 1;
-    Endpoint endpoint = 2;
+message SeederMessage {
+    VideoMessage video = 1;
+    EndpointMessage endpoint = 2;
 }
