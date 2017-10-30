@@ -9,8 +9,8 @@ import client.cli.Command;
  * Print the help
  */
 public class HelpCommand extends Command {
-    private static final String ANSI_PLAIN_TEXT = "\033[0;0m";
-    private static final String ANSI_BOLD_TEXT = "\033[0;1m";
+    public static final String ANSI_PLAIN_TEXT = "\033[0;0m";
+    public static final String ANSI_BOLD_TEXT = "\033[0;1m";
     @Override
     public void run(RequestManager manager) {
         printHelp(false);

@@ -36,6 +36,7 @@ public class Client {
             while (!stop){
                 input = reader.readLine();
                 if (input != null) {
+                    input = input.trim();
                     String[] arguments = input.split("\\s");
                     try {
                         CommandParser.parse(Arrays.asList(arguments))
