@@ -1,8 +1,8 @@
-package info;
+package model;
 
 /**
  * Created by satyan on 10/28/17.
  */
-public interface RPCConvertible<T> {
+public interface Convertible<T> {
     T convert();
 }

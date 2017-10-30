@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>objects</artifactId>
+    <artifactId>model</artifactId>
     <groupId>edge-netflix</groupId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>objects</name>
+    <name>model</name>
     <url>http://maven.apache.org</url>
 
     <properties>

@@ -1,8 +1,9 @@
-package info;
+package model;
 
 import com.google.gson.annotations.SerializedName;
+import route.EndpointMessage;
 
-public class Endpoint implements RPCConvertible<route.Endpoint> {
+public class Endpoint implements Convertible<EndpointMessage> {
     @SerializedName("transport")
     private String transport = "tcp";
     @SerializedName("ip")
@@ -18,10 +19,10 @@ public class Endpoint implements RPCConvertible<route.Endpoint> {
         }
     }
 
-    public Endpoint(route.Endpoint endpoint) {
-        this.ip = endpoint.getIp();
-        this.transport = endpoint.getTransport();
-        this.port = endpoint.getPort();
+    public Endpoint(EndpointMessage endpointMessage) {
+        this.ip = endpointMessage.getIp();
+        this.transport = endpointMessage.getTransport();
+        this.port = endpointMessage.getPort();
     }
 
     public String getTransport() {
@@ -36,8 +37,8 @@ public class Endpoint implements RPCConvertible<route.Endpoint> {
         return port;
     }
 
-    public route.Endpoint convert() {
-        return route.Endpoint.newBuilder()
+    public EndpointMessage convert() {
+        return EndpointMessage.newBuilder()
                 .setTransport(transport)
                 .setIp(ip)
                 .setPort(port)
