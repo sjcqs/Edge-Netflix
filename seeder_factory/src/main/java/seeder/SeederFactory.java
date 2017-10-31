@@ -89,6 +89,10 @@ class SeederFactory {
         @Override
         public void listSeeders(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
             List<String> keywords = request.getKeywordList();
+            String query = "";
+            for (String keyword : keywords) {
+                query += keyword;
+            }
             if (request.getKeywordCount() == 0){
                 for(SeederMessage seederMessage : seederMessages) {
                     responseObserver.onNext(seederMessage);
@@ -96,17 +100,21 @@ class SeederFactory {
             } else {
                 // Check if a keyword or the video name is matching
                 for(SeederMessage seederMessage : seederMessages) {
-                    for (String keyword : keywords) {
-                        VideoMessage videoMessage = seederMessage.getVideo();
-                        logger.log(Level.INFO, videoMessage.getName() + " : " + keyword);
+                    VideoMessage videoMessage = seederMessage.getVideo();
+                    final String name = videoMessage.getName();
+                    if (name.matches(query)){
+                        responseObserver.onNext(seederMessage);
+                    } else {
                         boolean send = false;
-                        if (videoMessage.getName().contains(keyword)) {
-                            send = true;
-                        } else {
-                            for (String str : videoMessage.getKeywordList()) {
-                                if (str.equals(keyword)) {
-                                    send = true;
-                                    break;
+                        for (String keyword : keywords) {
+                            if (name.contains(keyword)) {
+                                send = true;
+                            } else {
+                                for (String str : videoMessage.getKeywordList()) {
+                                    if (str.contains(keyword)) {
+                                        send = true;
+                                        break;
+                                    }
                                 }
                             }
                         }

@@ -1,6 +1,9 @@
 package portal.rest;
 
+import com.google.gson.Gson;
 import model.Seeder;
+import org.json.JSONObject;
+import portal.Portal;
 import portal.seeder.SeederFactoryClient;
 
 import javax.ws.rs.GET;
@@ -16,7 +19,7 @@ import java.util.List;
  */
 @Path("seeder")
 public class SeederRequest {
-    private SeederFactoryClient factoryClient = SeederFactoryClient.getInstance();
+    private SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
 
     // putting a param using query
     @GET
@@ -33,14 +36,7 @@ public class SeederRequest {
         }
 
         List<Seeder> seeders = factoryClient.listSeeders(strings);
-        if (seeders.isEmpty()){
-            return "No seeders";
-        }
-        String listString = "";
-        for (Seeder seeder : seeders) {
-            listString += "+ " + seeder + ";\n";
-        }
 
-        return listString;
+        return new Gson().toJson(seeders);
     }
 }

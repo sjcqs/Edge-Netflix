@@ -17,15 +17,16 @@ import java.util.Arrays;
 public class Client {
 
     public static void main(String[] args){
+        // Add hook to get a few signals
+
         if (args.length != 1){
             System.err.println("You need to specify the address of the portal");
             System.exit(-1);
         }
         //http://35.195.238.86
         String url = args[0];
-        RequestManager requestManager = null;
+        RequestManager requestManager = new RequestManager("http://" + url,8080);
         try {
-            requestManager = new RequestManager("http://" + url,8080);
             requestManager.start();
             HelpCommand.printHelp(true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
@@ -51,8 +52,10 @@ public class Client {
                 }
             }
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
             System.exit(1);
         } catch (IOException e) {
+            e.printStackTrace();
             System.exit(2);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,5 +68,18 @@ public class Client {
                 }
             }
         }
+        exit(requestManager);
+    }
+
+    /**
+     * Exit the application and clean what's needed to be cleaned
+     * @param manager
+     */
+    public static void exit(RequestManager manager) {
+        try {
+            manager.stop();
+        } catch (Exception ignored) {
+        }
+        System.exit(0);
     }
 }

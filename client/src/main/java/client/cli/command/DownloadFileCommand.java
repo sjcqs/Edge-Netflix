@@ -21,9 +21,9 @@ public class DownloadFileCommand extends Command {
         super(args);
         if (args == null || args.isEmpty()){
             throw new IllegalArgumentException(
-                    "ERROR\n" +
+                    HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                             "\tName of the video to download must be provided\n" +
-                    "USAGE\n" +
+                            HelpCommand.ANSI_BOLD_TEXT + "USAGE" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                             "\tdownload FILE"
             );
         }
@@ -37,11 +37,17 @@ public class DownloadFileCommand extends Command {
         }
         query = URLEncoder.encode(query,"UTF-8");
         ContentResponse response = manager.sendRequest(ADDRESS + "?name=" + query);
-        String json = response.getContentAsString();
-        Gson gson = new Gson();
-        Seeder seeder = Seeder.deserialize(json);
-        // TODO do stuff with seeder info
-        System.out.println(json);
-
+        if (response.getStatus() == 200) {
+            String json = response.getContentAsString();
+            Gson gson = new Gson();
+            Seeder seeder = Seeder.deserialize(json);
+            // TODO do stuff with seeder info
+            System.out.println(json);
+        } else {
+            System.out.println(
+                    HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
+                            "\tThe video cannot be downloaded. Try later.\n"
+            );
+        }
     }
 }

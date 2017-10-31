@@ -20,9 +20,10 @@ import java.util.logging.Logger;
 public class SeederFactoryClient {
     private static final Logger logger = Logger.getLogger(SeederFactoryClient.class.getName());
     private final SeederFactoryGrpc.SeederFactoryBlockingStub blockingStub;
+    private static SeederFactoryClient instance = null;
 
-    public static SeederFactoryClient getInstance(){
-        return new SeederFactoryClient("localhost",8980);
+    public static SeederFactoryClient getInstance(String address, int port){
+        return new SeederFactoryClient(address, port);
     }
 
     private SeederFactoryClient(String host, int port) {
@@ -37,9 +38,6 @@ public class SeederFactoryClient {
     public Seeder createSeeder(String name){
         // TODO check the database for videos info
         List<String> keywords = new LinkedList<>();
-        keywords.add("test0");
-        keywords.add("test1");
-        keywords.add("test2");
         Video video = new Video(
                 name,
                 "128x128",
@@ -52,7 +50,9 @@ public class SeederFactoryClient {
         } catch (StatusRuntimeException ex){
             logger.log(Level.WARNING,ex.getMessage());
         }
-
+        if (seederMessage == null){
+            logger.log(Level.WARNING,"SeederFactory wasn't able to create the seeder");
+        }
         return new Seeder(seederMessage);
     }
 

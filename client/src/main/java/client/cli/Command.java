@@ -11,6 +11,9 @@ public abstract class Command implements Executable{
     protected List<String> arguments;
 
     public Command(List<String> arguments){
+        if (arguments == null){
+            arguments = new ArrayList<>();
+        }
         this.arguments = arguments;
     }
 

@@ -1,5 +1,7 @@
 package client.cli.command;
 
+import client.RequestManager;
+
 import java.util.List;
 
 /**
@@ -15,5 +17,10 @@ public class ListVideosCommand extends ListCommand{
     }
     public ListVideosCommand(List<String> args){
         super(args,ADDRESS);
+    }
+
+    @Override
+    public void run(RequestManager manager) throws Exception {
+
     }
 }
