@@ -71,7 +71,9 @@ public class Video implements Convertible<VideoMessage> {
 
         builder.setName(name);
         builder.setBitrate(bitRate);
-        builder.addAllKeyword(keywords);
+        if (keywords != null){
+            builder.addAllKeyword(keywords);
+        }
         int width, height;
         String[] sizes = size.split("x");
         width = Integer.valueOf(sizes[0]);

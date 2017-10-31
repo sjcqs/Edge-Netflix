@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,20 +27,19 @@ public final class VideoUtil {
      * @return a list of the downloaded videos
      */
     public static List<Video> listVideos(){
-        List<Video> videos = new ArrayList<>();
         File folder = new File(VIDEO_DIR);
         File[] files = folder.listFiles();
-
         if (files != null) {
+            List<Video> videos = new ArrayList<>(files.length);
             for (File file : files) {
                 Video video = getVideoInfo(file);
-                if (video != null){
+                if (video != null) {
                     videos.add(video);
                 }
             }
+            return videos;
         }
-
-        return videos;
+        return new ArrayList<>();
     }
 
     /**
@@ -60,6 +60,22 @@ public final class VideoUtil {
             }
         }
         return null;
+    }
+
+    public static List<Video> getVideos(String name){
+        if (name.isEmpty()){
+            return null;
+        }
+        name = name.toLowerCase();
+        List<Video> videos = listVideos();
+        List<Video> result = new ArrayList<>(videos.size());
+        for (Video video : videos) {
+            String title = video.getName().toLowerCase();
+            if (title.contains(name)){
+                result.add(video);
+            }
+        }
+        return result;
     }
 
     private static Video getVideoInfo(File file) {
@@ -162,12 +178,5 @@ public final class VideoUtil {
     private static String getName(String fileName){
         fileName = removeExtension(fileName);
         return fileName.replaceAll("([a-z])([A-Z])","$1 $2");
-    }
-
-    public static void main(String[] args){
-        List<Video> videos = listVideos();
-        for (Video video : videos) {
-            System.out.println(new Gson().toJson(video));
-        }
     }
 }

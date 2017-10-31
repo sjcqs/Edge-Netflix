@@ -2,7 +2,6 @@ package portal.rest;
 
 import com.google.gson.Gson;
 import model.Seeder;
-import org.json.JSONObject;
 import portal.Portal;
 import portal.seeder.SeederFactoryClient;
 

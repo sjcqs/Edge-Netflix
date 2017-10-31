@@ -15,18 +15,23 @@ public class ListFilesCommand extends Command {
     @Override
     public void run(RequestManager manager) {
         List<Video> videos = VideoUtil.listVideos();
-        System.out.println(HelpCommand.ANSI_BOLD_TEXT + "DOWNLOADED" + HelpCommand.ANSI_PLAIN_TEXT);
+        printVideoList("DOWNLOADED",videos, true);
+        System.out.println(HelpCommand.ANSI_BOLD_TEXT + "DOWNLOADING" + HelpCommand.ANSI_PLAIN_TEXT);
+        System.out.println("\tNo videos being downloaded.");
+    }
+
+    static void printVideoList(String title, List<Video> videos, boolean metadata) {
+        System.out.println(HelpCommand.ANSI_BOLD_TEXT + title + HelpCommand.ANSI_PLAIN_TEXT);
         if (videos.isEmpty()){
             System.out.println("\tempty");
         }
         for (Video video : videos){
             System.out.println("\t" + HelpCommand.ANSI_BOLD_TEXT + video.getName() + HelpCommand.ANSI_PLAIN_TEXT);
-            System.out.println("\t\tduration: " + video.getFormattedDuration());
-            System.out.println("\t\tsize: " + video.getSize());
-            System.out.println("\t\tpath: " + video.getDirectory());
+            if (metadata) {
+                System.out.println("\t\tduration: " + video.getFormattedDuration());
+                System.out.println("\t\tsize: " + video.getSize());
+                System.out.println("\t\tpath: " + video.getDirectory());
+            }
         }
-        System.out.println(HelpCommand.ANSI_BOLD_TEXT + "DOWNLOADING" + HelpCommand.ANSI_PLAIN_TEXT);
-        System.out.println("\tNo videos being downloaded.");
     }
-
 }

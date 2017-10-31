@@ -14,6 +14,8 @@ service SeederFactory{
 
     // Send the list of seeders
     rpc ListSeeders(KeywordsMessage) returns (stream SeederMessage) {}
+
+    rpc ListVideos(KeywordsMessage) returns (stream VideoMessage) {}
 }
 
 message KeywordsMessage{

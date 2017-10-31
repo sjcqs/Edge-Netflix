@@ -1,6 +1,8 @@
 package portal.rest;
 
+import com.google.gson.Gson;
 import model.Seeder;
+import model.Video;
 import portal.Portal;
 import portal.seeder.SeederFactoryClient;
 
@@ -9,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by satyan on 10/12/17.
@@ -16,6 +19,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("video")
 public class VideoRequest {
+    private SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
 
     @GET
     @Path("download")
@@ -32,17 +36,16 @@ public class VideoRequest {
     @Produces(MediaType.TEXT_PLAIN)
     public String getVideoList(@QueryParam("keywords") String keywords) {
         if(keywords == null){
-            return listVideos();
+            keywords = "";
         }
-        else
-            return searchVideos(keywords);
-    }
 
-    private String searchVideos(String name) {
-        return getClass().getName() +", keywords: "+ name;
-    }
+        String[] strings = null;
+        if (!keywords.isEmpty()){
+            strings = keywords.split("\\s");
+        }
 
-    private String listVideos() {
-        return getClass().getName();
+        List<Video> videos = factoryClient.listVideos(strings);
+
+        return new Gson().toJson(videos);
     }
 }

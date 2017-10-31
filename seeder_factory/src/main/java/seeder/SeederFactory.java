@@ -4,6 +4,8 @@ package seeder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+import model.Video;
+import model.util.VideoUtil;
 import route.EndpointMessage;
 import route.KeywordsMessage;
 import route.SeederFactoryGrpc.SeederFactoryImplBase;
@@ -11,6 +13,7 @@ import route.SeederMessage;
 import route.VideoMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -91,8 +94,9 @@ class SeederFactory {
             List<String> keywords = request.getKeywordList();
             String query = "";
             for (String keyword : keywords) {
-                query += keyword;
+                query += keyword + " ";
             }
+            query = query.trim();
             if (request.getKeywordCount() == 0){
                 for(SeederMessage seederMessage : seederMessages) {
                     responseObserver.onNext(seederMessage);
@@ -121,6 +125,32 @@ class SeederFactory {
                         if (send) {
                             responseObserver.onNext(seederMessage);
                         }
+                    }
+                }
+            }
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void listVideos(KeywordsMessage request, StreamObserver<VideoMessage> responseObserver) {
+
+            if (request.getKeywordCount() == 0){
+                List<Video> videos = VideoUtil.listVideos();
+                for (Video video : videos) {
+                    responseObserver.onNext(video.convert());
+                }
+            } else {
+                List<String> keywords = request.getKeywordList();
+                String keyword = "";
+                for (String str : keywords) {
+                    keyword += str + " ";
+                }
+                keyword = keyword.trim();
+                List<Video> videos = VideoUtil.getVideos(keyword);
+
+                if (videos != null) {
+                    for (Video video : videos) {
+                        responseObserver.onNext(video.convert());
                     }
                 }
             }

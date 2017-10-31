@@ -84,4 +84,33 @@ public class SeederFactoryClient {
 
         return seederInfos;
     }
+
+    public List<Video> listVideos(String[] keywords){
+        List<VideoMessage> videoMessages = new LinkedList<>();
+        KeywordsMessage.Builder builder = KeywordsMessage.newBuilder();
+
+        if (keywords != null) {
+            for (String keyword : keywords) {
+                builder.addKeyword(keyword);
+            }
+        }
+
+        try {
+            Iterator<VideoMessage> it = blockingStub.listVideos(builder.build());
+            while (it.hasNext()){
+                VideoMessage videoMessage = it.next();
+                videoMessages.add(videoMessage);
+            }
+        } catch (StatusRuntimeException ex) {
+            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
+            return null;
+        }
+
+        List<Video> videos = new LinkedList<>();
+        for (VideoMessage videoMessage : videoMessages) {
+            videos.add(new Video(videoMessage));
+        }
+
+        return videos;
+    }
 }

@@ -23,7 +23,11 @@ public class Portal
 
     public static void main(String[] args )
     {
-        instance = new Portal("localhost",8980);
+        if (args.length != 1){
+            System.err.println("You need to specify the address of the seeder factory");
+            System.exit(-1);
+        }
+        instance = new Portal(args[0],8980);
 
         ResourceConfig config = new ResourceConfig();
         config.packages("portal/rest");
