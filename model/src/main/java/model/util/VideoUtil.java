@@ -1,6 +1,5 @@
 package model.util;
 
-import com.google.gson.Gson;
 import model.Video;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

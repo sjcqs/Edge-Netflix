@@ -2,12 +2,20 @@ package client.cli.command;
 
 import client.RequestManager;
 import client.cli.Command;
-import com.google.gson.Gson;
 import model.Seeder;
+import model.Video;
+import model.util.VideoUtil;
 import org.eclipse.jetty.client.api.ContentResponse;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -16,6 +24,7 @@ import java.util.List;
  */
 public class DownloadFileCommand extends Command {
     private final static String ADDRESS = "/video/download";
+    private final static String DOWNLOAD_DIR = "./videos/";
 
     public DownloadFileCommand(List<String> args){
         super(args);
@@ -31,23 +40,51 @@ public class DownloadFileCommand extends Command {
 
     @Override
     public void run(RequestManager manager) throws UnsupportedEncodingException {
+
         String query = "";
         for (String argument : arguments) {
             query += argument + " ";
         }
-        query = URLEncoder.encode(query,"UTF-8");
-        ContentResponse response = manager.sendRequest(ADDRESS + "?name=" + query);
-        if (response.getStatus() == 200) {
-            String json = response.getContentAsString();
-            Gson gson = new Gson();
-            Seeder seeder = Seeder.deserialize(json);
-            // TODO do stuff with seeder info
-            System.out.println(json);
-        } else {
+        if (VideoUtil.getVideo(query) != null){
             System.out.println(
                     HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
-                            "\tThe video cannot be downloaded. Try later.\n"
+                            "\tThe video is already downloaded."
             );
+        } else {
+            query = URLEncoder.encode(query, "UTF-8");
+            ContentResponse response = manager.sendRequest(ADDRESS + "?name=" + query);
+            if (response.getStatus() == 200) {
+                String json = response.getContentAsString();
+                Seeder seeder = Seeder.deserialize(json);
+
+                String filename = getFilename(seeder.getVideo());
+                Path filePath = Paths.get(DOWNLOAD_DIR + filename);
+                try {
+                    Files.createDirectories(filePath.getParent());
+                    filePath = Files.createFile(filePath);
+                    try (BufferedWriter writer = Files.newBufferedWriter(filePath, Charset.forName("UTF-8"))) {
+                        writer.write(json, 0, json.length());
+                    }
+                } catch (IOException e) {
+                    System.out.println(
+                            HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
+                                    "\tThe video cannot be downloaded."
+                    );
+                }
+                // TODO create a new thread to download/seed the file
+            } else {
+                System.out.println(
+                        HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
+                                "\tThe video cannot be downloaded."
+                );
+            }
         }
+    }
+
+    private static String getFilename(Video video) {
+        String name = video.getName();
+        name = name.trim().toLowerCase().replaceAll("\\s","_").replaceAll("[^a-z_A-Z.0-9]","");
+        name = name + ".ptorrent";
+        return name;
     }
 }

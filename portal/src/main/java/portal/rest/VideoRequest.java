@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -24,16 +25,26 @@ public class VideoRequest {
     @GET
     @Path("download")
     @Produces(MediaType.TEXT_PLAIN)
-    public String downloadFile(@QueryParam("name") String name) {
+    public Response downloadFile(@QueryParam("name") String keywords) {
+        if(keywords == null){
+            keywords = "";
+        }
+
+        String[] strings = null;
+        if (!keywords.isEmpty()){
+            strings = keywords.split("\\s");
+        }
         SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
-        // TODO replace the return value by a SeederMessage json
-        Seeder seeder = factoryClient.createSeeder(name);
-        return seeder.getJSON();
+        Seeder seeder = factoryClient.createSeeder(strings);
+        if (seeder == null){
+            return Response.status(Response.Status.NOT_FOUND).entity("Video not found").build();
+        }
+        return Response.ok(seeder.getJSON(),MediaType.APPLICATION_JSON).build();
     }
 
     @GET
     @Path("list")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getVideoList(@QueryParam("keywords") String keywords) {
         if(keywords == null){
             keywords = "";

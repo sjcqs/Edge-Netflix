@@ -1,5 +1,14 @@
 package model;
 
+/*
+    TODO
+    ADD:
+    * piece length: number of bytes in each piece (integer)
+    * pieces: string consisting of the concatenation of all 20-byte SHA1 hash values, one per piece
+    * length
+    * md5sum
+*/
+
 import com.google.gson.annotations.SerializedName;
 import route.SizeMessage;
 import route.VideoMessage;

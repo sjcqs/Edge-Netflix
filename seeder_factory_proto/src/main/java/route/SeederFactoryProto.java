@@ -57,13 +57,13 @@ public final class SeederFactoryProto {
       "age\022\021\n\ttransport\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t\022\014\n\004po" +
       "rt\030\003 \001(\005\"]\n\rSeederMessage\022\"\n\005video\030\001 \001(\013" +
       "2\023.route.VideoMessage\022(\n\010endpoint\030\002 \001(\0132" +
-      "\026.route.EndpointMessage2\314\001\n\rSeederFactor",
-      "y\022;\n\014CreateSeeder\022\023.route.VideoMessage\032\024" +
-      ".route.SeederMessage\"\000\022?\n\013ListSeeders\022\026." +
-      "route.KeywordsMessage\032\024.route.SeederMess" +
-      "age\"\0000\001\022=\n\nListVideos\022\026.route.KeywordsMe" +
-      "ssage\032\023.route.VideoMessage\"\0000\001B#\n\005routeB" +
-      "\022SeederFactoryProtoP\001\242\002\003RTGb\006proto3"
+      "\026.route.EndpointMessage2\317\001\n\rSeederFactor",
+      "y\022>\n\014CreateSeeder\022\026.route.KeywordsMessag" +
+      "e\032\024.route.SeederMessage\"\000\022?\n\013ListSeeders" +
+      "\022\026.route.KeywordsMessage\032\024.route.SeederM" +
+      "essage\"\0000\001\022=\n\nListVideos\022\026.route.Keyword" +
+      "sMessage\032\023.route.VideoMessage\"\0000\001B#\n\005rou" +
+      "teB\022SeederFactoryProtoP\001\242\002\003RTGb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

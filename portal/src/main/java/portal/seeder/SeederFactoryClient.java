@@ -35,23 +35,24 @@ public class SeederFactoryClient {
         blockingStub = SeederFactoryGrpc.newBlockingStub(channel);
     }
 
-    public Seeder createSeeder(String name){
-        // TODO check the database for videos info
-        List<String> keywords = new LinkedList<>();
-        Video video = new Video(
-                name,
-                "128x128",
-                144,
-                keywords
-        );
+    public Seeder createSeeder(String[] keywords){
+        KeywordsMessage.Builder builder = KeywordsMessage.newBuilder();
+
+        if (keywords != null) {
+            for (String keyword : keywords) {
+                builder.addKeyword(keyword);
+            }
+        }
+
         SeederMessage seederMessage = null;
         try {
-            seederMessage = blockingStub.createSeeder(video.convert());
+            seederMessage = blockingStub.createSeeder(builder.build());
         } catch (StatusRuntimeException ex){
             logger.log(Level.WARNING,ex.getMessage());
         }
         if (seederMessage == null){
             logger.log(Level.WARNING,"SeederFactory wasn't able to create the seeder");
+            return null;
         }
         return new Seeder(seederMessage);
     }

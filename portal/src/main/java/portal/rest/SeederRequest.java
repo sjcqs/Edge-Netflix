@@ -23,7 +23,7 @@ public class SeederRequest {
     // putting a param using query
     @GET
     @Path("list")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getSeederList(@QueryParam("keywords") String keywords) {
         if(keywords == null){
             keywords = "";

@@ -13,10 +13,8 @@ import route.SeederMessage;
 import route.VideoMessage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -73,19 +71,32 @@ class SeederFactory {
         private final List<SeederMessage> seederMessages = new LinkedList<>();
 
         @Override
-        public void createSeeder(VideoMessage request, StreamObserver<SeederMessage> responseObserver) {
+        public void createSeeder(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
             // TODO create a new seederMessage and add the real port
-            SeederMessage.Builder builder = SeederMessage.newBuilder();
-            EndpointMessage.Builder endpointBuilder = EndpointMessage.newBuilder();
-            endpointBuilder.setIp("localhost");
-            endpointBuilder.setPort(1002);
-            endpointBuilder.setTransport("tcp");
-            builder.setVideo(request);
-            builder.setEndpoint(endpointBuilder.build());
+            if (request.getKeywordCount() > 0) {
+                List<String> keywords = request.getKeywordList();
+                String keyword = "";
+                for (String str : keywords) {
+                    keyword += str + " ";
+                }
+                keyword = keyword.trim();
+                Video video = VideoUtil.getVideo(keyword);
 
-            SeederMessage seederMessage = builder.build();
-            seederMessages.add(seederMessage);
-            responseObserver.onNext(seederMessage);
+                if (video != null) {
+                    SeederMessage.Builder builder = SeederMessage.newBuilder();
+                    builder.setVideo(video.convert());
+
+                    EndpointMessage.Builder endpointBuilder = EndpointMessage.newBuilder();
+                    endpointBuilder.setIp("localhost");
+                    endpointBuilder.setPort(1002);
+                    endpointBuilder.setTransport("tcp");
+                    builder.setEndpoint(endpointBuilder.build());
+
+                    SeederMessage seederMessage = builder.build();
+                    seederMessages.add(seederMessage);
+                    responseObserver.onNext(seederMessage);
+                }
+            }
             responseObserver.onCompleted();
         }
 

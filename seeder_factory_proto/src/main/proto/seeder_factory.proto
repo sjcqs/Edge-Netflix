@@ -10,7 +10,7 @@ package route;
 service SeederFactory{
     // Portal -> SeederFactory
     // Ask to create the seeder for the given video and returns the created seeder in return
-    rpc CreateSeeder(VideoMessage) returns (SeederMessage) {}
+    rpc CreateSeeder(KeywordsMessage) returns (SeederMessage) {}
 
     // Send the list of seeders
     rpc ListSeeders(KeywordsMessage) returns (stream SeederMessage) {}
