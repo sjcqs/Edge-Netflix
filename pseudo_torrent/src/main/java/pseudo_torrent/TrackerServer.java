@@ -12,6 +12,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,14 +48,18 @@ public class TrackerServer implements Runnable{
                 String target = new String(packet.getData(), 0, packet.getLength());
                 System.out.println(target);
 
+
+
                 // READ DATABASE, UPDATE DB, etc
                 Connection con = DriverManager.getConnection(
-                        "jdbc:mariadb://35.187.4.11:3306",
+                        "jdbc:mariadb://localhost:3306",
                         "seeder",
                         "Netflix");
 
                 Statement stmt = con.createStatement();
-                
+                stmt.executeUpdate("INSERT INTO peer * VALUES ((\"peer8\",\"10.0.0.0\",5000,0);");
+                stmt.close();
+                con.close();
 
 
 
@@ -73,6 +78,8 @@ public class TrackerServer implements Runnable{
                 System.out.println("packet sent");
 
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
