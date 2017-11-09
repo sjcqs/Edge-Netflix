@@ -53,4 +53,9 @@ public interface VideoMessageOrBuilder extends
    */
   com.google.protobuf.ByteString
       getKeywordBytes(int index);
+
+  /**
+   * <code>bytes checksum = 5;</code>
+   */
+  com.google.protobuf.ByteString getChecksum();
 }

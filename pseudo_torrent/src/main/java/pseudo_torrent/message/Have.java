@@ -2,13 +2,12 @@ package pseudo_torrent.message;
 
 /**
  * Created by satyan on 11/9/17.
- * Request a piece
  */
-public class Request extends Message {
+public class Have extends Message {
     private int index;
 
-    public Request(int index) {
-        super(REQUEST_ID);
+    public Have(int index) {
+        super(HAVE_ID);
         this.index = index;
     }
 

@@ -33,14 +33,6 @@ public class Seeder implements Convertible<SeederMessage> {
         return gson.toJson(info, Seeder.class);
     }
 
-    public static void main(String[] args){
-        Seeder info = new Seeder(
-                new Video("film1", "300x400", 30, new ArrayList<>()),
-                new Endpoint("127.0.0.1", 8000));
-        System.out.println(getJSON(info));
-        System.out.println(info.getJSON());
-    }
-
     public static String getJSON(List<Seeder> infos){
         Gson gson = new Gson();
         return gson.toJson(infos, Seeder.class);

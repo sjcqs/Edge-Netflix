@@ -19,6 +19,7 @@ private static final long serialVersionUID = 0L;
     name_ = "";
     bitrate_ = 0;
     keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    checksum_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -80,6 +81,11 @@ private static final long serialVersionUID = 0L;
               mutable_bitField0_ |= 0x00000008;
             }
             keyword_.add(s);
+            break;
+          }
+          case 42: {
+
+            checksum_ = input.readBytes();
             break;
           }
         }
@@ -203,6 +209,15 @@ private static final long serialVersionUID = 0L;
     return keyword_.getByteString(index);
   }
 
+  public static final int CHECKSUM_FIELD_NUMBER = 5;
+  private com.google.protobuf.ByteString checksum_;
+  /**
+   * <code>bytes checksum = 5;</code>
+   */
+  public com.google.protobuf.ByteString getChecksum() {
+    return checksum_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -226,6 +241,9 @@ private static final long serialVersionUID = 0L;
     }
     for (int i = 0; i < keyword_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, keyword_.getRaw(i));
+    }
+    if (!checksum_.isEmpty()) {
+      output.writeBytes(5, checksum_);
     }
     unknownFields.writeTo(output);
   }
@@ -254,6 +272,10 @@ private static final long serialVersionUID = 0L;
       size += dataSize;
       size += 1 * getKeywordList().size();
     }
+    if (!checksum_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(5, checksum_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -281,6 +303,8 @@ private static final long serialVersionUID = 0L;
         == other.getBitrate());
     result = result && getKeywordList()
         .equals(other.getKeywordList());
+    result = result && getChecksum()
+        .equals(other.getChecksum());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -304,6 +328,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + KEYWORD_FIELD_NUMBER;
       hash = (53 * hash) + getKeywordList().hashCode();
     }
+    hash = (37 * hash) + CHECKSUM_FIELD_NUMBER;
+    hash = (53 * hash) + getChecksum().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -445,6 +471,8 @@ private static final long serialVersionUID = 0L;
 
       keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       bitField0_ = (bitField0_ & ~0x00000008);
+      checksum_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -481,6 +509,7 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000008);
       }
       result.keyword_ = keyword_;
+      result.checksum_ = checksum_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -542,6 +571,9 @@ private static final long serialVersionUID = 0L;
           keyword_.addAll(other.keyword_);
         }
         onChanged();
+      }
+      if (other.getChecksum() != com.google.protobuf.ByteString.EMPTY) {
+        setChecksum(other.getChecksum());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -873,6 +905,35 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       ensureKeywordIsMutable();
       keyword_.add(value);
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.ByteString checksum_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes checksum = 5;</code>
+     */
+    public com.google.protobuf.ByteString getChecksum() {
+      return checksum_;
+    }
+    /**
+     * <code>bytes checksum = 5;</code>
+     */
+    public Builder setChecksum(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      checksum_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes checksum = 5;</code>
+     */
+    public Builder clearChecksum() {
+      
+      checksum_ = getDefaultInstance().getChecksum();
       onChanged();
       return this;
     }

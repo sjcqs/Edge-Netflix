@@ -10,6 +10,7 @@ package model;
 */
 
 import com.google.gson.annotations.SerializedName;
+import com.google.protobuf.ByteString;
 import route.SizeMessage;
 import route.VideoMessage;
 
@@ -18,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Video implements Convertible<VideoMessage> {
+    private byte[] checksum = null;
     private String name;
     private String size;
     @SerializedName("bit_rate")
@@ -34,21 +36,19 @@ public class Video implements Convertible<VideoMessage> {
         this.size = size;
     }
 
-    public Video(String name, String size, int bitRate, List<String> keywordsList) {
-        this(name,"",size, bitRate, keywordsList);
-    }
-
     public Video(VideoMessage videoMessage){
         this.name = videoMessage.getName();
         SizeMessage size = videoMessage.getSize();
         this.size = size.getWidth() + "x" + size.getHeight();
         this.bitRate = videoMessage.getBitrate();
         this.keywords = new LinkedList<>(videoMessage.getKeywordList());
+        this.checksum = videoMessage.getChecksum().toByteArray();
     }
 
-    public Video(String name, String directory, String size, int bitRate, double duration) {
+    public Video(String name, String directory, String size, int bitRate, double duration, byte[] checksum) {
         this(name,directory,size, bitRate,null);
         this.duration = duration;
+        this.checksum = checksum;
     }
 
     public String getDirectory() {
@@ -88,6 +88,7 @@ public class Video implements Convertible<VideoMessage> {
         width = Integer.valueOf(sizes[0]);
         height = Integer.valueOf(sizes[1]);
         builder.setSize(SizeMessage.newBuilder().setWidth(width).setHeight(height).build());
+        builder.setChecksum(ByteString.copyFrom(checksum));
 
         return builder.build();
     }
@@ -97,5 +98,9 @@ public class Video implements Convertible<VideoMessage> {
         int min = (int) (dur / 60);
         int sec = (int) dur % 60;
         return min + " min " + sec + " sec";
+    }
+
+    public byte[] getChecksum() {
+        return checksum;
     }
 }

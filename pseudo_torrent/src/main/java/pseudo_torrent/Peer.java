@@ -1,10 +1,12 @@
 package pseudo_torrent;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 /**
  * Created by satyan on 10/31/17.
@@ -12,49 +14,95 @@ import java.net.Socket;
  * PEER PROTOCOL
  *  STATES: am_choke = 1, am_interested = 0, peer_chocked = 1, peer_interested = 0
  */
-public class Peer implements Runnable{
+public class Peer implements Runnable {
+    private final static Logger LOG = Logger.getLogger(Peer.class.getName());
+
+    private String peerID;
+    private ConcurrentMap<String, CommunicationState> communicationStates;
+    private Downloader downloader;
+    private DatagramSocket socket;
+    private Thread downloaderThread;
+    private boolean running = false;
+
+    public static class State {
+        private boolean choked = true;
+        private boolean interested = false;
+
+        public boolean isChoked() {
+            return choked;
+        }
+
+        public void setChoked(boolean choked) {
+            this.choked = choked;
+        }
+
+        public boolean isInterested() {
+            return interested;
+        }
+
+        public void setInterested(boolean interested) {
+            this.interested = interested;
+        }
+
+        @Override
+        public String toString() {
+            return "choked: " + choked + "; interested: " + interested;
+        }
+    }
+
+    public static class CommunicationState {
+        private State myState = new State();
+        private State peerState = new State();
+
+        public State getMyState() {
+            return myState;
+        }
+
+        public State getPeerState() {
+            return peerState;
+        }
+    }
+
+    public Peer(){
+        Random random = new Random(System.currentTimeMillis());
+        peerID = "PT" + random.nextInt(1000);
+        communicationStates = new ConcurrentHashMap<>();
+        downloader = new Downloader(this);
+        downloaderThread = new Thread(downloader);
+    }
+
+    public String getPeerID() {
+        return peerID;
+    }
+
     @Override
     public void run() {
         try {
-            String sentence;
-            String modifiedSentence;
-            BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-            Socket clientSocket = new Socket("localhost", 6789);
-            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            while (running) {
+                downloaderThread.run();
+                socket = new DatagramSocket(0);
+                byte[] buff = new byte[4096];
+                DatagramPacket packet = new DatagramPacket(buff,buff.length);
+                socket.receive(packet);
 
-            sentence = inFromUser.readLine();
-            outToServer.writeBytes(sentence + '\n');
-            modifiedSentence = inFromServer.readLine();
-            System.out.println("FROM SERVER: " + modifiedSentence);
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        /*
-        String clientSentence;
-        String capitalizedSentence;
-        ServerSocket welcomeSocket = null;
-        try {
-            welcomeSocket = new ServerSocket(6789);
-            while (true) {
-                Socket connectionSocket = welcomeSocket.accept();
-                BufferedReader inFromClient =
-                        new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-                clientSentence = inFromClient.readLine();
-                System.out.println("Received: " + clientSentence);
-                capitalizedSentence = clientSentence.toUpperCase() + '\n';
-                outToClient.writeBytes(capitalizedSentence);
+                LOG.info("Port: " + socket.getLocalPort());
             }
-        } catch (IOException e) {
+            socket.close();
+            downloaderThread.join();
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-         */
+    }
+
+    public void stop(){
+        running = false;
     }
 
     public static void main(String[] args){
-        new Peer().run();
+        Peer peer = new Peer();
+        LOG.info("peerID: " + peer.getPeerID());
+        peer.run();
     }
+
+
 }

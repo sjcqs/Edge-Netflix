@@ -4,17 +4,22 @@ import model.Video;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by satyan on 10/30/17.
  */
 public final class VideoUtil {
+    private final static Logger LOGGER = Logger.getLogger(VideoUtil.class.getName());
 
     private static final String VIDEO_DIR = "./videos";
 
@@ -100,11 +105,13 @@ public final class VideoUtil {
                 String size = width + "x" + height;
                 int bitrate = Integer.parseInt(format.getString("bit_rate"));
                 double duration = Double.parseDouble(format.getString("duration"));
+                byte[] checksum = Checksum.checksum(file);
 
-                video = new Video(name, directory, size, bitrate, duration);
+                video = new Video(name, directory, size, bitrate, duration, checksum);
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
         return video;
     }

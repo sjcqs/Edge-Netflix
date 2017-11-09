@@ -32,6 +32,7 @@ message VideoMessage {
     SizeMessage size = 2;
     int32 bitrate = 3;
     repeated string keyword = 4;
+    bytes checksum = 5;
 }
 
 message EndpointMessage{

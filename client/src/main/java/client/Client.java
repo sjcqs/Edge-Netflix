@@ -2,6 +2,7 @@ package client;
 
 import client.cli.CommandParser;
 import client.cli.command.HelpCommand;
+import com.sun.media.jfxmedia.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 public class Client {
 
     public static void main(String[] args){
+        Logger.setLevel(Logger.DEBUG);
         // Add hook to get a few signals
 
         if (args.length != 1){
