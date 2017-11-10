@@ -2,19 +2,14 @@ package pseudo_torrent.request;
 
 public class TrackerRequest {
 
-
-    public enum Event {
-        STARTED, STOPPED, COMPLETED
-    }
-
-    private String videoName;
+    private String checksum;
     private String peerId;
     private int port;
-    private int leftBytes;
-    private Event event;
+    private long leftBytes;
+    private PeerEvent event;
 
-    public TrackerRequest(String videoName, String peerId, int port, int leftBytes, Event event){
-        this.videoName = videoName;
+    public TrackerRequest(String checksum, String peerId, int port, long leftBytes, PeerEvent event){
+        this.checksum = checksum;
         this.peerId = peerId;
         this.port = port;
         this.leftBytes = leftBytes;
@@ -25,19 +20,19 @@ public class TrackerRequest {
         return peerId;
     }
 
-    public String getVideoName() {
-        return videoName;
+    public String getChecksum() {
+        return checksum;
     }
 
     public int getPort() {
         return port;
     }
 
-    public int getLeftBytes() {
+    public long getLeftBytes() {
         return leftBytes;
     }
 
-    public Event getEvent() {
+    public PeerEvent getEvent() {
         return event;
     }
 }

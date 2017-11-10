@@ -1,22 +1,18 @@
 package model.util;
 
+import com.google.common.io.PatternFilenameFilter;
 import model.Video;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Created by satyan on 10/30/17.
+ * Video utility to access video files, etc
  */
 public final class VideoUtil {
     private final static Logger LOGGER = Logger.getLogger(VideoUtil.class.getName());
@@ -28,14 +24,15 @@ public final class VideoUtil {
     /**
      * List downloaded video in "./videos" directory
      * @return a list of the downloaded videos
+     * @param computeChecksum compute the checksum if true
      */
-    public static List<Video> listVideos(){
+    public static List<Video> listVideos(boolean computeChecksum){
         File folder = new File(VIDEO_DIR);
         File[] files = folder.listFiles();
         if (files != null) {
             List<Video> videos = new ArrayList<>(files.length);
             for (File file : files) {
-                Video video = getVideoInfo(file);
+                Video video = getVideoInfo(file,computeChecksum);
                 if (video != null) {
                     videos.add(video);
                 }
@@ -48,14 +45,15 @@ public final class VideoUtil {
     /**
      * Get a video using it's name
      * @param name video's name
+     * @param computeChecksum  compute the checksum if true
      * @return the video
      */
-    public static Video getVideo(String name){
+    public static Video getVideo(String name, boolean computeChecksum){
         if (name.isEmpty()){
             return null;
         }
         name = name.replaceAll("\\s","").toLowerCase();
-        List<Video> videos = listVideos();
+        List<Video> videos = listVideos(computeChecksum);
         for (Video video : videos) {
             String title = video.getName().replaceAll("\\s","").toLowerCase();
             if (title.contains(name)){
@@ -70,7 +68,7 @@ public final class VideoUtil {
             return null;
         }
         name = name.toLowerCase();
-        List<Video> videos = listVideos();
+        List<Video> videos = listVideos(false);
         List<Video> result = new ArrayList<>(videos.size());
         for (Video video : videos) {
             String title = video.getName().toLowerCase();
@@ -81,8 +79,7 @@ public final class VideoUtil {
         return result;
     }
 
-    private static Video getVideoInfo(File file) {
-        Video video = null;
+    private static Video getVideoInfo(File file, boolean computeChecksum) {
         try {
             JSONObject json = new JSONObject(getJson(file));
             if (json.length() > 0) {
@@ -105,15 +102,18 @@ public final class VideoUtil {
                 String size = width + "x" + height;
                 int bitrate = Integer.parseInt(format.getString("bit_rate"));
                 double duration = Double.parseDouble(format.getString("duration"));
-                byte[] checksum = Checksum.checksum(file);
+                String checksum = "";
+                if (computeChecksum){
+                    checksum = Checksum.checksum(file);
+                }
+                long length = file.length();
 
-                video = new Video(name, directory, size, bitrate, duration, checksum);
+                return new Video(name, file.getName(), length, directory, size, bitrate, duration, checksum);
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
         }
-        return video;
+        return null;
     }
 
     private static String getJson(File file) {
@@ -183,5 +183,31 @@ public final class VideoUtil {
     private static String getName(String fileName){
         fileName = removeExtension(fileName);
         return fileName.replaceAll("([a-z])([A-Z])","$1 $2");
+    }
+
+    public static String getTorrentFilename(Video video) {
+        return video.getFilename() + ".ptorrent";
+    }
+
+    public static String getPartFilename(Video video, int part){
+        return video.getFilename() + String.format(".part%03d",part);
+    }
+
+    public static long videoDownloaded(Video video){
+        File folder = new File(VIDEO_DIR);
+        File videoFile = new File(VIDEO_DIR + video.getFilename());
+        long length = 0;
+
+        if (videoFile.exists()){
+            length = videoFile.length();
+        } else {
+            File[] files = folder.listFiles(new PatternFilenameFilter(video.getFilename()+"\\.part\\.*"));
+            if (files != null) {
+                for (File file : files) {
+                    length += file.length();
+                }
+            }
+        }
+        return length;
     }
 }

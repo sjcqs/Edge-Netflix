@@ -32,7 +32,7 @@ public class FileInformationCommand extends Command {
     }
     @Override
     public void run(RequestManager manager) {
-        Video video = VideoUtil.getVideo(name);
+        Video video = VideoUtil.getVideo(name, false);
         if (video != null){
             System.out.println(HelpCommand.ANSI_BOLD_TEXT + "INFO" + HelpCommand.ANSI_PLAIN_TEXT);
             System.out.println("\t" + HelpCommand.ANSI_BOLD_TEXT + video.getName() + HelpCommand.ANSI_PLAIN_TEXT);

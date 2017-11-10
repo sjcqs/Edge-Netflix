@@ -1,5 +1,6 @@
 package model.util;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +17,7 @@ public class Checksum {
      * @param file the file
      * @return the checksum (SHA-256)
      */
-    public static byte[] checksum(File file){
+    public static String checksum(File file){
         try (InputStream in = new FileInputStream(file)){
             MessageDigest digest = MessageDigest.getInstance(METHOD);
             byte[] data = new byte[4096];
@@ -24,7 +25,7 @@ public class Checksum {
             while ((length = in.read(data)) > 0) {
                 digest.update(data, 0, length);
             }
-            return digest.digest();
+            return DatatypeConverter.printHexBinary(digest.digest());
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -36,10 +37,10 @@ public class Checksum {
      * @param bytes the bytes
      * @return the checksum (SHA-256)
      */
-    public static byte[] checksum(byte[] bytes){
+    public static String checksum(byte[] bytes){
         try {
             MessageDigest digest = MessageDigest.getInstance(METHOD);
-            return digest.digest(bytes);
+            return DatatypeConverter.printHexBinary(digest.digest(bytes));
         } catch (NoSuchAlgorithmException ignored) {
         }
         return null;

@@ -51,20 +51,21 @@ public final class SeederFactoryProto {
       "\n#src/main/proto/seeder_factory.proto\022\005r" +
       "oute\"\"\n\017KeywordsMessage\022\017\n\007keyword\030\001 \003(\t" +
       "\",\n\013SizeMessage\022\r\n\005width\030\001 \001(\005\022\016\n\006height" +
-      "\030\002 \001(\005\"r\n\014VideoMessage\022\014\n\004name\030\001 \001(\t\022 \n\004" +
-      "size\030\002 \001(\0132\022.route.SizeMessage\022\017\n\007bitrat" +
-      "e\030\003 \001(\005\022\017\n\007keyword\030\004 \003(\t\022\020\n\010checksum\030\005 \001" +
-      "(\014\">\n\017EndpointMessage\022\021\n\ttransport\030\001 \001(\t" +
-      "\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\"]\n\rSeederMess" +
-      "age\022\"\n\005video\030\001 \001(\0132\023.route.VideoMessage\022" +
-      "(\n\010endpoint\030\002 \001(\0132\026.route.EndpointMessag",
-      "e2\317\001\n\rSeederFactory\022>\n\014CreateSeeder\022\026.ro" +
-      "ute.KeywordsMessage\032\024.route.SeederMessag" +
-      "e\"\000\022?\n\013ListSeeders\022\026.route.KeywordsMessa" +
-      "ge\032\024.route.SeederMessage\"\0000\001\022=\n\nListVide" +
-      "os\022\026.route.KeywordsMessage\032\023.route.Video" +
-      "Message\"\0000\001B#\n\005routeB\022SeederFactoryProto" +
-      "P\001\242\002\003RTGb\006proto3"
+      "\030\002 \001(\005\"\224\001\n\014VideoMessage\022\014\n\004name\030\001 \001(\t\022 \n" +
+      "\004size\030\002 \001(\0132\022.route.SizeMessage\022\017\n\007bitra" +
+      "te\030\003 \001(\005\022\017\n\007keyword\030\004 \003(\t\022\020\n\010checksum\030\005 " +
+      "\001(\t\022\016\n\006length\030\006 \001(\003\022\020\n\010filename\030\007 \001(\t\">\n" +
+      "\017EndpointMessage\022\021\n\ttransport\030\001 \001(\t\022\n\n\002i" +
+      "p\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\"]\n\rSeederMessage\022\"" +
+      "\n\005video\030\001 \001(\0132\023.route.VideoMessage\022(\n\010en",
+      "dpoint\030\002 \001(\0132\026.route.EndpointMessage2\317\001\n" +
+      "\rSeederFactory\022>\n\014CreateSeeder\022\026.route.K" +
+      "eywordsMessage\032\024.route.SeederMessage\"\000\022?" +
+      "\n\013ListSeeders\022\026.route.KeywordsMessage\032\024." +
+      "route.SeederMessage\"\0000\001\022=\n\nListVideos\022\026." +
+      "route.KeywordsMessage\032\023.route.VideoMessa" +
+      "ge\"\0000\001B#\n\005routeB\022SeederFactoryProtoP\001\242\002\003" +
+      "RTGb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -95,7 +96,7 @@ public final class SeederFactoryProto {
     internal_static_route_VideoMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_route_VideoMessage_descriptor,
-        new java.lang.String[] { "Name", "Size", "Bitrate", "Keyword", "Checksum", });
+        new java.lang.String[] { "Name", "Size", "Bitrate", "Keyword", "Checksum", "Length", "Filename", });
     internal_static_route_EndpointMessage_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_route_EndpointMessage_fieldAccessorTable = new

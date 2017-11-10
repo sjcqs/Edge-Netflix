@@ -72,7 +72,8 @@ class SeederFactory {
 
         @Override
         public void createSeeder(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
-            // TODO create a new seederMessage and add the real port
+            logger.info("Create a seeder");
+            // TODO create a new seederMessage and add the real port, check if a seeder doesn't already exist
             if (request.getKeywordCount() > 0) {
                 List<String> keywords = request.getKeywordList();
                 String keyword = "";
@@ -80,7 +81,7 @@ class SeederFactory {
                     keyword += str + " ";
                 }
                 keyword = keyword.trim();
-                Video video = VideoUtil.getVideo(keyword);
+                Video video = VideoUtil.getVideo(keyword, true);
 
                 if (video != null) {
                     SeederMessage.Builder builder = SeederMessage.newBuilder();
@@ -102,6 +103,7 @@ class SeederFactory {
 
         @Override
         public void listSeeders(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
+            logger.info("List the seeders");
             List<String> keywords = request.getKeywordList();
             String query = "";
             for (String keyword : keywords) {
@@ -144,9 +146,10 @@ class SeederFactory {
 
         @Override
         public void listVideos(KeywordsMessage request, StreamObserver<VideoMessage> responseObserver) {
+            logger.info("Get the list of available videos");
 
             if (request.getKeywordCount() == 0){
-                List<Video> videos = VideoUtil.listVideos();
+                List<Video> videos = VideoUtil.listVideos(false);
                 for (Video video : videos) {
                     responseObserver.onNext(video.convert());
                 }

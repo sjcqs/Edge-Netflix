@@ -62,12 +62,10 @@ public class Client {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (requestManager != null){
-                try {
-                    requestManager.stop();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                requestManager.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         exit(requestManager);
@@ -75,7 +73,7 @@ public class Client {
 
     /**
      * Exit the application and clean what's needed to be cleaned
-     * @param manager
+     * @param manager the manager
      */
     public static void exit(RequestManager manager) {
         try {

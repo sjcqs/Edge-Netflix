@@ -3,12 +3,10 @@ package client.cli.command;
 import client.RequestManager;
 import client.cli.Command;
 import model.Seeder;
-import model.Video;
 import model.util.VideoUtil;
 import org.eclipse.jetty.client.api.ContentResponse;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -45,7 +43,7 @@ public class DownloadFileCommand extends Command {
         for (String argument : arguments) {
             query += argument + " ";
         }
-        if (VideoUtil.getVideo(query) != null){
+        if (VideoUtil.getVideo(query, false) != null){
             System.out.println(
                     HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                             "\tThe video is already downloaded."
@@ -57,7 +55,7 @@ public class DownloadFileCommand extends Command {
                 String json = response.getContentAsString();
                 Seeder seeder = Seeder.deserialize(json);
 
-                String filename = getFilename(seeder.getVideo());
+                String filename = VideoUtil.getTorrentFilename(seeder.getVideo());
                 Path filePath = Paths.get(DOWNLOAD_DIR + filename);
                 try {
                     Files.createDirectories(filePath.getParent());
@@ -79,12 +77,5 @@ public class DownloadFileCommand extends Command {
                 );
             }
         }
-    }
-
-    private static String getFilename(Video video) {
-        String name = video.getName();
-        name = name.trim().toLowerCase().replaceAll("\\s","_").replaceAll("[^a-z_A-Z.0-9]","");
-        name = name + ".ptorrent";
-        return name;
     }
 }

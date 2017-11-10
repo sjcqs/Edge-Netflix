@@ -55,7 +55,27 @@ public interface VideoMessageOrBuilder extends
       getKeywordBytes(int index);
 
   /**
-   * <code>bytes checksum = 5;</code>
+   * <code>string checksum = 5;</code>
    */
-  com.google.protobuf.ByteString getChecksum();
+  java.lang.String getChecksum();
+  /**
+   * <code>string checksum = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getChecksumBytes();
+
+  /**
+   * <code>int64 length = 6;</code>
+   */
+  long getLength();
+
+  /**
+   * <code>string filename = 7;</code>
+   */
+  java.lang.String getFilename();
+  /**
+   * <code>string filename = 7;</code>
+   */
+  com.google.protobuf.ByteString
+      getFilenameBytes();
 }

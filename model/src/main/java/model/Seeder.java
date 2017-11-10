@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import route.SeederMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Seeder implements Convertible<SeederMessage> {
@@ -13,9 +12,9 @@ public class Seeder implements Convertible<SeederMessage> {
     @SerializedName("endpoint")
     private Endpoint endpoint;
 
-    public Seeder(Video video, Endpoint endpoint) {
+    public Seeder(Video video, String address, int port) {
         this.video = video;
-        this.endpoint = endpoint;
+        this.endpoint = new Endpoint(address,port);
     }
 
     public Seeder(SeederMessage seederMessage){
@@ -42,8 +41,8 @@ public class Seeder implements Convertible<SeederMessage> {
         return video;
     }
 
-    public String getIp(){
-        return endpoint.getIp();
+    public String getAddress(){
+        return endpoint.getAddress();
     }
 
     public String getTransport(){
@@ -60,6 +59,7 @@ public class Seeder implements Convertible<SeederMessage> {
                 .setEndpoint(endpoint.convert())
                 .build();
     }
+
 
     @Override
     public String toString() {

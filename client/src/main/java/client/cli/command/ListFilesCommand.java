@@ -14,7 +14,7 @@ import java.util.List;
 public class ListFilesCommand extends Command {
     @Override
     public void run(RequestManager manager) {
-        List<Video> videos = VideoUtil.listVideos();
+        List<Video> videos = VideoUtil.listVideos(false);
         printVideoList("DOWNLOADED",videos, true);
         System.out.println(HelpCommand.ANSI_BOLD_TEXT + "DOWNLOADING" + HelpCommand.ANSI_PLAIN_TEXT);
         System.out.println("\tNo videos being downloaded.");
@@ -31,6 +31,7 @@ public class ListFilesCommand extends Command {
                 System.out.println("\t\tduration: " + video.getFormattedDuration());
                 System.out.println("\t\tsize: " + video.getSize());
                 System.out.println("\t\tpath: " + video.getDirectory());
+                System.out.format("\t\tlength: %.3fMB%n",video.getLength() / Math.pow(2,20));
             }
         }
     }

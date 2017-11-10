@@ -1,7 +1,10 @@
 package pseudo_torrent;
 
 import com.google.gson.Gson;
+import model.Seeder;
+import model.util.VideoUtil;
 import pseudo_torrent.request.PeerAddress;
+import pseudo_torrent.request.PeerEvent;
 import pseudo_torrent.request.TrackerRequest;
 import pseudo_torrent.request.TrackerResponse;
 
@@ -21,12 +24,12 @@ import java.util.logging.Logger;
 public class TrackerServer implements Runnable{
     private final static Logger LOGGER = Logger.getLogger("TrackerServer");
     private static final int PEER_SENT = 30;
-    protected DatagramSocket socket = null;
+    private DatagramSocket socket = null;
+    private Seeder seeder;
 
-    public TrackerServer() throws IOException{
-        super();
-        socket = new DatagramSocket(4444);
-
+    public TrackerServer(int port, Seeder seeder) throws IOException{
+        socket = new DatagramSocket(port);
+        this.seeder = seeder;
     }
 
     /*Gson gson = new Gson();
@@ -56,17 +59,16 @@ public class TrackerServer implements Runnable{
                 String target = new String(packet.getData(), 0, packet.getLength());
                 TrackerRequest request = gson.fromJson(target,TrackerRequest.class);
 
-
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();
 
-                LOGGER.info(address.getHostAddress());
+                LOGGER.info("Update received: " + address.getHostAddress() + ":" + port);
 
                 // READ DATABASE, UPDATE DB, etc
                 connection = getConnection();
                 PreparedStatement statement;
 
-                if (request.getEvent() == TrackerRequest.Event.STOPPED){
+                if (request.getEvent() == PeerEvent.STOPPED){
                     statement = connection
                             .prepareStatement("DELETE FROM peer WHERE peer_id = ?");
                     statement.setString(1,request.getPeerId());
@@ -77,13 +79,14 @@ public class TrackerServer implements Runnable{
                                     "INSERT INTO peer(peer_id, address, port, completed) VALUES (?,?,?,?)" +
                                             "ON DUPLICATE KEY UPDATE address=?,port=?,completed=?"
                             );
+
                     statement.setString(1, request.getPeerId());
                     statement.setString(2, address.getHostAddress());
                     statement.setString(5, address.getHostAddress());
-                    statement.setInt(3, packet.getPort());
-                    statement.setInt(6, packet.getPort());
-                    statement.setInt(4, request.getEvent() == TrackerRequest.Event.COMPLETED ? 1 : 0);
-                    statement.setInt(7, request.getEvent() == TrackerRequest.Event.COMPLETED ? 1 : 0);
+                    statement.setInt(3, request.getPort());
+                    statement.setInt(6, request.getPort());
+                    statement.setInt(4, request.getEvent() == PeerEvent.COMPLETED ? 1 : 0);
+                    statement.setInt(7, request.getEvent() == PeerEvent.COMPLETED ? 1 : 0);
                 }
 
                 statement.executeUpdate();
@@ -123,12 +126,15 @@ public class TrackerServer implements Runnable{
                     incomplete = set.getInt("incomplete");
                 }
 
-                TrackerResponse response = new TrackerResponse(complete,incomplete, addresses);
+                TrackerResponse response;
+                if (!request.getChecksum().equals(seeder.getVideo().getChecksum())){
+                    response = new TrackerResponse("Wrong video (checksum is different)");
+                } else {
+                    response = new TrackerResponse(complete,incomplete, addresses);
+                }
                 byte[] buf2 = new Gson().toJson(response).getBytes();
                 packet = new DatagramPacket(buf2, buf2.length, address, port);
                 socket.send(packet);
-
-                LOGGER.info("packet sent " + buf2.length + " peer count: " + addresses.size());
 
                 connection.close();
             } catch (IOException | SQLException e) {
@@ -137,8 +143,16 @@ public class TrackerServer implements Runnable{
         }
     }
 
+    /*
+            /!\ FOR TESTING ONLY
+     */
     public static void main(String[] args) throws IOException {
-        (new TrackerServer()).run();
+        Seeder seeder = new Seeder(
+                VideoUtil.getVideo("letter",true),
+                "localhost",
+                4444
+        );
+        new TrackerServer(4444, seeder).run();
     }
 }
 

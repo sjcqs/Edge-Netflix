@@ -1,18 +1,25 @@
 package pseudo_torrent.request;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrackerResponse{
-    private int interval = 120;
-    private int complete;
-    private int incomplete;
-    private List<PeerAddress> peerAddresses = new ArrayList<>();
+    private final static int DEFAULT_INTERVAL = 120;
+
+    private  String failureReason = null;
+    private Integer interval = null;
+    private Integer complete = null;
+    private Integer incomplete = null;
+    private List<PeerAddress> peerAddresses = null;
 
     public TrackerResponse( int complete, int incomplete, List<PeerAddress> peerAddresses) {
+        this.interval = DEFAULT_INTERVAL;
         this.complete = complete;
         this.incomplete = incomplete;
         this.peerAddresses = peerAddresses;
+    }
+
+    public TrackerResponse(String failureReason){
+        this.failureReason = failureReason;
     }
 
     public void setInterval(int interval) {
@@ -29,6 +36,10 @@ public class TrackerResponse{
 
     public int getIncomplete() {
         return incomplete;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
     }
 
     public List<PeerAddress> getPeerAddresses() {

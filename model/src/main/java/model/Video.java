@@ -10,7 +10,6 @@ package model;
 */
 
 import com.google.gson.annotations.SerializedName;
-import com.google.protobuf.ByteString;
 import route.SizeMessage;
 import route.VideoMessage;
 
@@ -19,8 +18,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Video implements Convertible<VideoMessage> {
-    private byte[] checksum = null;
+    private long length;
+    private String checksum = null;
     private String name;
+    private String filename;
     private String size;
     @SerializedName("bit_rate")
     private int bitRate;
@@ -28,12 +29,16 @@ public class Video implements Convertible<VideoMessage> {
     private List<String> keywords = new ArrayList<>();
     private double duration = 0d;
 
-    public Video(String name, String directory, String size, int bitRate, List<String> keywords){
+    private Video(String name, String filename, long length, String directory, String size, int bitRate, double duration, String checksum, List<String> keywords){
         this.name = name;
+        this.filename = filename;
         this.directory = directory;
         this.keywords = keywords;
         this.bitRate = bitRate;
         this.size = size;
+        this.length = length;
+        this.checksum = checksum;
+        this.duration = duration;
     }
 
     public Video(VideoMessage videoMessage){
@@ -42,13 +47,13 @@ public class Video implements Convertible<VideoMessage> {
         this.size = size.getWidth() + "x" + size.getHeight();
         this.bitRate = videoMessage.getBitrate();
         this.keywords = new LinkedList<>(videoMessage.getKeywordList());
-        this.checksum = videoMessage.getChecksum().toByteArray();
+        this.checksum = videoMessage.getChecksum();
+        this.length = videoMessage.getLength();
+        this.filename = videoMessage.getFilename();
     }
 
-    public Video(String name, String directory, String size, int bitRate, double duration, byte[] checksum) {
-        this(name,directory,size, bitRate,null);
-        this.duration = duration;
-        this.checksum = checksum;
+    public Video(String name, String filename, long length, String directory, String size, int bitRate, double duration, String checksum) {
+        this(name, filename, length, directory, size, bitRate, duration, checksum, null);
     }
 
     public String getDirectory() {
@@ -75,6 +80,18 @@ public class Video implements Convertible<VideoMessage> {
         return keywords;
     }
 
+    public long getLength() {
+        return length;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getChecksum() {
+        return checksum;
+    }
+
     public VideoMessage convert(){
         VideoMessage.Builder builder = VideoMessage.newBuilder();
 
@@ -88,7 +105,9 @@ public class Video implements Convertible<VideoMessage> {
         width = Integer.valueOf(sizes[0]);
         height = Integer.valueOf(sizes[1]);
         builder.setSize(SizeMessage.newBuilder().setWidth(width).setHeight(height).build());
-        builder.setChecksum(ByteString.copyFrom(checksum));
+        builder.setLength(length);
+        builder.setChecksum(checksum);
+        builder.setFilename(filename);
 
         return builder.build();
     }
@@ -98,9 +117,5 @@ public class Video implements Convertible<VideoMessage> {
         int min = (int) (dur / 60);
         int sec = (int) dur % 60;
         return min + " min " + sec + " sec";
-    }
-
-    public byte[] getChecksum() {
-        return checksum;
     }
 }

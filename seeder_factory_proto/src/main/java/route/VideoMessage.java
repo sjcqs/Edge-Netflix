@@ -19,7 +19,9 @@ private static final long serialVersionUID = 0L;
     name_ = "";
     bitrate_ = 0;
     keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    checksum_ = com.google.protobuf.ByteString.EMPTY;
+    checksum_ = "";
+    length_ = 0L;
+    filename_ = "";
   }
 
   @java.lang.Override
@@ -84,8 +86,20 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-            checksum_ = input.readBytes();
+            checksum_ = s;
+            break;
+          }
+          case 48: {
+
+            length_ = input.readInt64();
+            break;
+          }
+          case 58: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            filename_ = s;
             break;
           }
         }
@@ -210,12 +224,80 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int CHECKSUM_FIELD_NUMBER = 5;
-  private com.google.protobuf.ByteString checksum_;
+  private volatile java.lang.Object checksum_;
   /**
-   * <code>bytes checksum = 5;</code>
+   * <code>string checksum = 5;</code>
    */
-  public com.google.protobuf.ByteString getChecksum() {
-    return checksum_;
+  public java.lang.String getChecksum() {
+    java.lang.Object ref = checksum_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      checksum_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string checksum = 5;</code>
+   */
+  public com.google.protobuf.ByteString
+      getChecksumBytes() {
+    java.lang.Object ref = checksum_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      checksum_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int LENGTH_FIELD_NUMBER = 6;
+  private long length_;
+  /**
+   * <code>int64 length = 6;</code>
+   */
+  public long getLength() {
+    return length_;
+  }
+
+  public static final int FILENAME_FIELD_NUMBER = 7;
+  private volatile java.lang.Object filename_;
+  /**
+   * <code>string filename = 7;</code>
+   */
+  public java.lang.String getFilename() {
+    java.lang.Object ref = filename_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      filename_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string filename = 7;</code>
+   */
+  public com.google.protobuf.ByteString
+      getFilenameBytes() {
+    java.lang.Object ref = filename_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      filename_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -242,8 +324,14 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < keyword_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, keyword_.getRaw(i));
     }
-    if (!checksum_.isEmpty()) {
-      output.writeBytes(5, checksum_);
+    if (!getChecksumBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, checksum_);
+    }
+    if (length_ != 0L) {
+      output.writeInt64(6, length_);
+    }
+    if (!getFilenameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, filename_);
     }
     unknownFields.writeTo(output);
   }
@@ -272,9 +360,15 @@ private static final long serialVersionUID = 0L;
       size += dataSize;
       size += 1 * getKeywordList().size();
     }
-    if (!checksum_.isEmpty()) {
+    if (!getChecksumBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, checksum_);
+    }
+    if (length_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(5, checksum_);
+        .computeInt64Size(6, length_);
+    }
+    if (!getFilenameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, filename_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -305,6 +399,10 @@ private static final long serialVersionUID = 0L;
         .equals(other.getKeywordList());
     result = result && getChecksum()
         .equals(other.getChecksum());
+    result = result && (getLength()
+        == other.getLength());
+    result = result && getFilename()
+        .equals(other.getFilename());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -330,6 +428,11 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + CHECKSUM_FIELD_NUMBER;
     hash = (53 * hash) + getChecksum().hashCode();
+    hash = (37 * hash) + LENGTH_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getLength());
+    hash = (37 * hash) + FILENAME_FIELD_NUMBER;
+    hash = (53 * hash) + getFilename().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -471,7 +574,11 @@ private static final long serialVersionUID = 0L;
 
       keyword_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       bitField0_ = (bitField0_ & ~0x00000008);
-      checksum_ = com.google.protobuf.ByteString.EMPTY;
+      checksum_ = "";
+
+      length_ = 0L;
+
+      filename_ = "";
 
       return this;
     }
@@ -510,6 +617,8 @@ private static final long serialVersionUID = 0L;
       }
       result.keyword_ = keyword_;
       result.checksum_ = checksum_;
+      result.length_ = length_;
+      result.filename_ = filename_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -572,8 +681,16 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       }
-      if (other.getChecksum() != com.google.protobuf.ByteString.EMPTY) {
-        setChecksum(other.getChecksum());
+      if (!other.getChecksum().isEmpty()) {
+        checksum_ = other.checksum_;
+        onChanged();
+      }
+      if (other.getLength() != 0L) {
+        setLength(other.getLength());
+      }
+      if (!other.getFilename().isEmpty()) {
+        filename_ = other.filename_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -909,17 +1026,43 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.ByteString checksum_ = com.google.protobuf.ByteString.EMPTY;
+    private java.lang.Object checksum_ = "";
     /**
-     * <code>bytes checksum = 5;</code>
+     * <code>string checksum = 5;</code>
      */
-    public com.google.protobuf.ByteString getChecksum() {
-      return checksum_;
+    public java.lang.String getChecksum() {
+      java.lang.Object ref = checksum_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        checksum_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>bytes checksum = 5;</code>
+     * <code>string checksum = 5;</code>
      */
-    public Builder setChecksum(com.google.protobuf.ByteString value) {
+    public com.google.protobuf.ByteString
+        getChecksumBytes() {
+      java.lang.Object ref = checksum_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        checksum_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string checksum = 5;</code>
+     */
+    public Builder setChecksum(
+        java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -929,11 +1072,120 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bytes checksum = 5;</code>
+     * <code>string checksum = 5;</code>
      */
     public Builder clearChecksum() {
       
       checksum_ = getDefaultInstance().getChecksum();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string checksum = 5;</code>
+     */
+    public Builder setChecksumBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      checksum_ = value;
+      onChanged();
+      return this;
+    }
+
+    private long length_ ;
+    /**
+     * <code>int64 length = 6;</code>
+     */
+    public long getLength() {
+      return length_;
+    }
+    /**
+     * <code>int64 length = 6;</code>
+     */
+    public Builder setLength(long value) {
+      
+      length_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 length = 6;</code>
+     */
+    public Builder clearLength() {
+      
+      length_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object filename_ = "";
+    /**
+     * <code>string filename = 7;</code>
+     */
+    public java.lang.String getFilename() {
+      java.lang.Object ref = filename_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        filename_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string filename = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFilenameBytes() {
+      java.lang.Object ref = filename_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        filename_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string filename = 7;</code>
+     */
+    public Builder setFilename(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      filename_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string filename = 7;</code>
+     */
+    public Builder clearFilename() {
+      
+      filename_ = getDefaultInstance().getFilename();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string filename = 7;</code>
+     */
+    public Builder setFilenameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      filename_ = value;
       onChanged();
       return this;
     }
