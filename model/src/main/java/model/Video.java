@@ -65,11 +65,6 @@ public class Video implements Convertible<VideoMessage> {
         this(name, filename, length, directory, size, bitRate, duration, checksum, null, checksums);
     }
 
-    public Video(String name, String directory, String size, int bitRate, double duration) {
-        this(name,directory,size, bitRate,null);
-        this.duration = duration;
-    }
-
     public String getDirectory() {
         return directory;
     }
