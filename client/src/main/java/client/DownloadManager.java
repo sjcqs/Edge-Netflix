@@ -27,6 +27,9 @@ public class DownloadManager{
     private Map<Peer,Future> peers = new HashMap<>();
 
     public void submitPeer(Peer peer){
+        if (threadPool.isShutdown()){
+            threadPool = Executors.newFixedThreadPool(MAX_THREADS);
+        }
         Future future = threadPool.submit(peer);
         peers.put(peer,future);
     }

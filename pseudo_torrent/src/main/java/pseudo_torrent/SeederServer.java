@@ -76,11 +76,11 @@ public class SeederServer extends Thread {
                         Iterator<Integer> it = in.iterator();
                         while (it.hasNext()){
                             int index = it.next();
-                            if (random.nextInt(100) < 65){
+                            if (random.nextInt(100) < 85){
                                 set.set(index, true);
                             }
                         }
-                        postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myAddr.getId(), set));
+                        postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myAddr.getId(), set.get(0,field.size())));
                     }
                 }
             }

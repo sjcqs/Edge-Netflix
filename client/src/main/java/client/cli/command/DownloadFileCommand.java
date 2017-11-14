@@ -52,7 +52,7 @@ public class DownloadFileCommand extends Command {
 
         query = URLEncoder.encode(query, "UTF-8");
         ContentResponse response = requestManager.sendRequest(ADDRESS + "?name=" + query);
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             String json = response.getContentAsString();
             Seeder seeder = Seeder.deserialize(json);
 

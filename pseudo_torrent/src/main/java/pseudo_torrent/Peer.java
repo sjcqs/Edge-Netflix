@@ -297,6 +297,7 @@ public class Peer extends Thread{
     private Thread trackerThread;
     private Request lastRequest;
     private boolean downloaded = false;
+    private Map<Request, Long> requestDates = new HashMap<>();
 
     public Peer(Seeder seeder){
         setDefaultUncaughtExceptionHandler((thread, throwable) -> LOGGER.info(throwable.getMessage()));
@@ -370,7 +371,7 @@ public class Peer extends Thread{
 
         try {
             socket = new DatagramSocket(0);
-            socket.setSoTimeout(20_000);
+            socket.setSoTimeout(60_000);
             this.uploadPort = socket.getLocalPort();
         } catch (SocketException e) {
             System.out.println("ERROR: cannot download the video");
@@ -393,14 +394,6 @@ public class Peer extends Thread{
                 }
             }
 
-            try {
-                msg = postman.receive(socket);
-            } catch (SocketTimeoutException ignored) {
-            }
-
-            if (msg != null) {
-                handler.handle(msg);
-            }
             LOGGER.info("MESSAGE TREATED");
 
             if (!downloaded) {
@@ -410,6 +403,15 @@ public class Peer extends Thread{
             if (currentMilis - lastShuffle < SHUFFLE_INTERVAL) {
                 lastShuffle = currentMilis;
                 downloaders = shuffle(waitingDownloaders, downloaders, DOWNLOADER_COUNT);
+            }
+
+            try {
+                msg = postman.receive(socket);
+            } catch (SocketTimeoutException ignored) {
+            }
+
+            if (msg != null) {
+                handler.handle(msg);
             }
         }
     }
@@ -462,11 +464,13 @@ public class Peer extends Thread{
             Deque<Request> requests = awaitingRequests.get(uploader.getId());
             Request request = requests.peekFirst();
             if (request != null ) {
-                if (lastRequest != null && lastRequest.equals(request)){
+                long current = System.currentTimeMillis();
+                if (lastRequest != null && lastRequest.equals(request) && current - requestDates.get(lastRequest) < 45_000){
                     return false;
                 }
                 LOGGER.info("Send request (first): \n index: " + request.getIndex() + " offset: " + request.getOffset());
                 lastRequest =  request;
+                requestDates.put(lastRequest, current);
                 postman.send(socket, uploader.getAddress(), uploader.getPort(), request);
                 return true;
             }
