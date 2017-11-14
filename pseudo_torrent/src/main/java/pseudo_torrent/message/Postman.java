@@ -67,7 +67,7 @@ public class Postman {
             buffer.put(msgBytes);
 
             byte[] data = buffer.array();
-            LOGGER.info("DATA: " + data.length);
+            LOGGER.info("DATA: " + 4 + msgBytes.length);
             DatagramPacket packet = new DatagramPacket(data, 4 + msgBytes.length, addr, port);
             try {
                 socket.send(packet);
