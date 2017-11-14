@@ -424,6 +424,7 @@ public class Peer extends Thread{
             String uploaderId = uploader.getId();
             CommunicationTable table = tableMap.get(uploaderId);
             if (table != null){
+
                 LOGGER.info(  myId + " -> " + uploaderId + "\n" + table.toString());
                 if (!table.isHandshakeSent()){
                     postman.send(socket, uploader.getAddress(), uploader.getPort(), handshake);
