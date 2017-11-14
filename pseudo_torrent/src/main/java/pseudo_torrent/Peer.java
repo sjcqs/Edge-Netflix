@@ -539,11 +539,11 @@ public class Peer extends Thread{
 
     private BitSet diff(CommunicationTable table) throws IllegalArgumentException {
         BitSet set = table.getField();
-        int size = table.getSize();
+        int size = video.getChunkCount();
         BitSet res = new BitSet(size);
         for (int i = 0; i < size; i++) {
             if (!field.get(i) && set.get(i)){
-                res.flip(i);
+                res.set(i, true);
             }
         }
         return res;
