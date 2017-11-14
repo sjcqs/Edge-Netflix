@@ -2,11 +2,11 @@ package pseudo_torrent.request;
 
 public class TrackerRequest {
 
-    private String checksum;
-    private String peerId;
-    private int port;
-    private long leftBytes;
-    private PeerEvent event;
+    private String checksum = null;
+    private String peerId = null;
+    private Integer port = null;
+    private Long leftBytes = null;
+    private PeerEvent event = null;
 
     public TrackerRequest(String checksum, String peerId, int port, long leftBytes, PeerEvent event){
         this.checksum = checksum;
@@ -14,6 +14,11 @@ public class TrackerRequest {
         this.port = port;
         this.leftBytes = leftBytes;
         this.event = event;
+    }
+
+    public TrackerRequest(String peerId) {
+        this.peerId = peerId;
+        this.event = PeerEvent.STOPPED;
     }
 
     public String getPeerId() {

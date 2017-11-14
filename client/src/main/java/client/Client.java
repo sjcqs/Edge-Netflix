@@ -15,21 +15,46 @@ import java.util.Arrays;
  * client.Client
  * TODO: Add RESTManager to centralize REST info (ip, port, data, etc)
  */
-public class Client {
+public class Client implements Runnable {
+
+
+    private final DownloadManager downloadManager;
+    private final RequestManager requestManager;
+
+    public Client(String url) {
+        downloadManager = new DownloadManager();
+        requestManager = new RequestManager("http://" + url,8080);
+    }
 
     public static void main(String[] args){
-        Logger.setLevel(Logger.DEBUG);
-        // Add hook to get a few signals
-
         if (args.length != 1){
             System.err.println("You need to specify the address of the portal");
             System.exit(-1);
         }
         //http://35.195.238.86
         String url = args[0];
-        RequestManager requestManager = new RequestManager("http://" + url,8080);
+        new Client(url).run();
+    }
+
+    /**
+     * Exit the application and clean what's needed to be cleaned
+     */
+    public void exit() {
         try {
-            requestManager.start();
+            requestManager.stop();
+            downloadManager.stop();
+        } catch (Exception ignored) {
+        }
+        System.exit(0);
+    }
+
+    @Override
+    public void run() {
+        Logger.setLevel(Logger.DEBUG);
+        // Add hook to get a few signals
+
+        try {
+            requestManager.run();
             HelpCommand.printHelp(true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
             boolean stop = false;
@@ -43,7 +68,7 @@ public class Client {
                     String[] arguments = input.split("\\s");
                     try {
                         CommandParser.parse(Arrays.asList(arguments))
-                                .run(requestManager);
+                                .run(this);
                     } catch (IllegalArgumentException e) {
                         System.out.println();
                         System.out.println(e.getLocalizedMessage());
@@ -68,18 +93,14 @@ public class Client {
                 e.printStackTrace();
             }
         }
-        exit(requestManager);
+        exit();
     }
 
-    /**
-     * Exit the application and clean what's needed to be cleaned
-     * @param manager the manager
-     */
-    public static void exit(RequestManager manager) {
-        try {
-            manager.stop();
-        } catch (Exception ignored) {
-        }
-        System.exit(0);
+    public DownloadManager getDownloadManager() {
+        return downloadManager;
+    }
+
+    public RequestManager getRequestManager() {
+        return requestManager;
     }
 }

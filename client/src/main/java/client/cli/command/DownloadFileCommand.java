@@ -1,10 +1,14 @@
 package client.cli.command;
 
+import client.Client;
+import client.DownloadManager;
 import client.RequestManager;
 import client.cli.Command;
 import model.Seeder;
+import model.Video;
 import model.util.VideoUtil;
 import org.eclipse.jetty.client.api.ContentResponse;
+import pseudo_torrent.Peer;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -37,45 +41,43 @@ public class DownloadFileCommand extends Command {
     }
 
     @Override
-    public void run(RequestManager manager) throws UnsupportedEncodingException {
+    public void run(Client client) throws UnsupportedEncodingException {
+        RequestManager requestManager = client.getRequestManager();
+        DownloadManager downloadManager = client.getDownloadManager();
 
         String query = "";
         for (String argument : arguments) {
             query += argument + " ";
         }
-        if (VideoUtil.getVideo(query, false) != null){
-            System.out.println(
-                    HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
-                            "\tThe video is already downloaded."
-            );
-        } else {
-            query = URLEncoder.encode(query, "UTF-8");
-            ContentResponse response = manager.sendRequest(ADDRESS + "?name=" + query);
-            if (response.getStatus() == 200) {
-                String json = response.getContentAsString();
-                Seeder seeder = Seeder.deserialize(json);
 
-                String filename = VideoUtil.getTorrentFilename(seeder.getVideo());
-                Path filePath = Paths.get(DOWNLOAD_DIR + filename);
-                try {
-                    Files.createDirectories(filePath.getParent());
-                    filePath = Files.createFile(filePath);
-                    try (BufferedWriter writer = Files.newBufferedWriter(filePath, Charset.forName("UTF-8"))) {
-                        writer.write(json, 0, json.length());
-                    }
-                } catch (IOException e) {
-                    System.out.println(
-                            HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
-                                    "\tThe video cannot be downloaded."
-                    );
-                }
-                // TODO create a new thread to download/seed the file
-            } else {
+        query = URLEncoder.encode(query, "UTF-8");
+        ContentResponse response = requestManager.sendRequest(ADDRESS + "?name=" + query);
+        if (response.getStatus() == 200) {
+            String json = response.getContentAsString();
+            Seeder seeder = Seeder.deserialize(json);
+
+            if(downloadManager.getPeerCount() < DownloadManager.MAX_PEER){
+                Video video = seeder.getVideo();
+                downloadManager.submitPeer(new Peer(seeder));
                 System.out.println(
-                        HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
-                                "\tThe video cannot be downloaded."
+                        HelpCommand.ANSI_BOLD_TEXT + "DOWNLOADING" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
+                                "\t " + video.getName() + "\n" +
+                                "\t\t destination: " + DOWNLOAD_DIR + video.getFilename() +
+                                "\n\t\t checksum: " + video.getChecksum()
+                );
+            } else {
+                System.out.printf(
+                        HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "%n" +
+                                "\tOnly %d video(s) can be downloaded at the match time.%n",
+                        DownloadManager.MAX_PEER
                 );
             }
+
+        } else {
+            System.out.println(
+                    HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
+                            "\tThe video cannot be downloaded."
+            );
         }
     }
 }

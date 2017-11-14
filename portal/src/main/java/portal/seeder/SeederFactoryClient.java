@@ -10,6 +10,7 @@ import route.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class SeederFactoryClient {
     private static final Logger logger = Logger.getLogger(SeederFactoryClient.class.getName());
     private final SeederFactoryGrpc.SeederFactoryBlockingStub blockingStub;
-    private static SeederFactoryClient instance = null;
+    private final ManagedChannel channel;
 
     public static SeederFactoryClient getInstance(String address, int port){
         return new SeederFactoryClient(address, port);
@@ -31,7 +32,7 @@ public class SeederFactoryClient {
     }
 
     private SeederFactoryClient(ManagedChannelBuilder<?> builder) {
-        ManagedChannel channel = builder.build();
+        channel = builder.build();
         blockingStub = SeederFactoryGrpc.newBlockingStub(channel);
     }
 
@@ -114,4 +115,11 @@ public class SeederFactoryClient {
 
         return videos;
     }
+
+    public void shutdown() throws InterruptedException {
+        channel.shutdown();
+        channel.awaitTermination(3, TimeUnit.SECONDS);
+    }
+
+
 }

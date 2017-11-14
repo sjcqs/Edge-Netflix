@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import route.SeederMessage;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class Seeder implements Convertible<SeederMessage> {
@@ -43,6 +45,10 @@ public class Seeder implements Convertible<SeederMessage> {
 
     public String getAddress(){
         return endpoint.getAddress();
+    }
+
+    public InetAddress getInetAddres() throws UnknownHostException {
+        return InetAddress.getByName(endpoint.getAddress());
     }
 
     public String getTransport(){

@@ -4,17 +4,22 @@ package seeder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+import model.Seeder;
 import model.Video;
 import model.util.VideoUtil;
-import route.EndpointMessage;
+import pseudo_torrent.SeederServer;
 import route.KeywordsMessage;
 import route.SeederFactoryGrpc.SeederFactoryImplBase;
 import route.SeederMessage;
 import route.VideoMessage;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +33,7 @@ class SeederFactory {
     private final Server server;
 
 
-    /** Create a RouteGuide server listening on {@code port} using {@code featureFile} database. */
+    /** Create a RouteGuide server listening on {@code uploadPort} using {@code featureFile} database. */
     SeederFactory(int port) throws IOException {
         this(ServerBuilder.forPort(port), port);
     }
@@ -68,12 +73,13 @@ class SeederFactory {
     }
 
     private static class SeederFactoryService extends SeederFactoryImplBase{
-        private final List<SeederMessage> seederMessages = new LinkedList<>();
+        //private static final String SEEDER_FACTORY_ADDRESS = "35.187.4.11";
+        private static final String SEEDER_FACTORY_ADDRESS = "localhost";
+        private final List<Seeder> seeders = new LinkedList<>();
+        private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
         @Override
         public void createSeeder(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
-            logger.info("Create a seeder");
-            // TODO create a new seederMessage and add the real port, check if a seeder doesn't already exist
             if (request.getKeywordCount() > 0) {
                 List<String> keywords = request.getKeywordList();
                 String keyword = "";
@@ -82,20 +88,35 @@ class SeederFactory {
                 }
                 keyword = keyword.trim();
                 Video video = VideoUtil.getVideo(keyword, true);
-
                 if (video != null) {
-                    SeederMessage.Builder builder = SeederMessage.newBuilder();
-                    builder.setVideo(video.convert());
+                    logger.info("Video wanted: " + video.getName());
+                    // Search if the seeder is already running
+                    boolean found = false;
+                    for (Seeder seeder : seeders) {
+                        if (seeder.getVideo().equals(video)){
+                            logger.info("Get a seeder on: " + seeder.getPort());
+                            responseObserver.onNext(seeder.convert());
+                            found = true;
+                        }
+                    }
 
-                    EndpointMessage.Builder endpointBuilder = EndpointMessage.newBuilder();
-                    endpointBuilder.setIp("localhost");
-                    endpointBuilder.setPort(1002);
-                    endpointBuilder.setTransport("tcp");
-                    builder.setEndpoint(endpointBuilder.build());
+                    if (!found) {
+                        SeederServer seederServer = null;
+                        try {
+                            seederServer = new SeederServer(SEEDER_FACTORY_ADDRESS, video);
+                            threadPool.submit(seederServer);
+                        } catch (SocketException | UnknownHostException e) {
+                            logger.warning("Couldn't create the seeder.");
+                        }
 
-                    SeederMessage seederMessage = builder.build();
-                    seederMessages.add(seederMessage);
-                    responseObserver.onNext(seederMessage);
+                        if (seederServer != null) {
+                            Seeder seeder = seederServer.getSeeder();
+                            SeederMessage seederMessage = seeder.convert();
+                            logger.info("Create a seeder on " + seeder.getPort());
+                            seeders.add(seeder);
+                            responseObserver.onNext(seederMessage);
+                        }
+                    }
                 }
             }
             responseObserver.onCompleted();
@@ -111,12 +132,13 @@ class SeederFactory {
             }
             query = query.trim();
             if (request.getKeywordCount() == 0){
-                for(SeederMessage seederMessage : seederMessages) {
-                    responseObserver.onNext(seederMessage);
+                for(Seeder seeder : seeders) {
+                    responseObserver.onNext(seeder.convert());
                 }
             } else {
                 // Check if a keyword or the video name is matching
-                for(SeederMessage seederMessage : seederMessages) {
+                for(Seeder seeder : seeders) {
+                    SeederMessage seederMessage = seeder.convert();
                     VideoMessage videoMessage = seederMessage.getVideo();
                     final String name = videoMessage.getName();
                     if (name.matches(query)){
@@ -149,7 +171,7 @@ class SeederFactory {
             logger.info("Get the list of available videos");
 
             if (request.getKeywordCount() == 0){
-                List<Video> videos = VideoUtil.listVideos(false);
+                List<Video> videos = VideoUtil.listVideos();
                 for (Video video : videos) {
                     responseObserver.onNext(video.convert());
                 }

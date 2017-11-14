@@ -19,10 +19,14 @@ import java.util.logging.Logger;
 public class TrackerClient  implements Runnable{
     private static final Logger LOGGER = Logger.getLogger("TrackerClient");
     private final Peer peer;
+    private String peerId;
     private PeerEvent event = PeerEvent.STARTED;
+    private final Seeder seeder;
 
     public TrackerClient(Peer peer, boolean stop) {
         this.peer = peer;
+        this.seeder = peer.getSeeder();
+        peerId = peer.getPeerId();
         if (stop){
             event = PeerEvent.STOPPED;
         }
@@ -30,64 +34,77 @@ public class TrackerClient  implements Runnable{
 
     @Override
     public void run() {
+         DatagramSocket socket = null;
         try {
+            socket = new DatagramSocket();
             Gson gson = new Gson();
-            Seeder seeder;
-            Video video;
-            String peerId;
-            int port;
-            // Access can be concurrent with the downloader thread
-            synchronized (peer) {
-                seeder = peer.getSeeder();
-                video = seeder.getVideo();
-                peerId = peer.getPeerID();
-                port = peer.getPort();
-            }
-            long downloaded = VideoUtil.videoDownloaded(video);
-            if (downloaded == video.getLength()){
-                event = PeerEvent.COMPLETED;
-            }
+            byte[] buf;
+            if (event.equals(PeerEvent.STOPPED)){
+                LOGGER.info("STOPPED");
+                TrackerRequest req = new TrackerRequest(peerId);
+                buf = gson.toJson(req).getBytes();
+                DatagramPacket packet = new DatagramPacket(buf, buf.length, seeder.getInetAddres(), seeder.getPort());
+                socket.send(packet);
 
-            DatagramSocket socket = new DatagramSocket();
-            TrackerRequest req =
-                    new TrackerRequest(video.getChecksum(), peerId, port,video.getLength() - downloaded, event);
-
-            String json = gson.toJson(req);
-            LOGGER.info("Sending update: " +json);
-            byte[] buf = json.getBytes();
-            InetAddress address;
-            address = InetAddress.getByName(seeder.getAddress());
-            int seederPort = seeder.getPort();
-
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, seederPort);
-            socket.send(packet);
-
-            //receive
-            buf = new byte[4096];
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
-
-            json = new String(packet.getData(), 0, packet.getLength());
-            LOGGER.info(json);
-
-            TrackerResponse response = gson.fromJson(json,TrackerResponse.class);
-            if (response.getFailureReason() == null) {
-                synchronized (peer) {
-                    List<PeerAddress> addresses = peer.getAvailablePeers();
-                    addresses.clear();
-                    addresses.addAll(response.getPeerAddresses());
-                    peer.setInterval(response.getInterval());
-                }
             } else {
-                LOGGER.warning(response.getFailureReason());
-                synchronized (peer){
-                    peer.stop(response.getFailureReason());
+                Video video;
+                int port;
+                // Access can be concurrent with the downloader thread
+                synchronized (peer) {
+
+                    video = seeder.getVideo();
+                    port = peer.getUploadPort();
+                }
+                long downloaded = VideoUtil.downloaded(video);
+                if (downloaded == video.getLength()) {
+                    event = PeerEvent.COMPLETED;
+                }
+
+                TrackerRequest req;
+
+                req = new TrackerRequest(video.getChecksum(), peerId, port, video.getLength() - downloaded, event);
+
+                String json = gson.toJson(req);
+                buf = json.getBytes();
+                InetAddress address;
+                address = InetAddress.getByName(seeder.getAddress());
+                int seederPort = seeder.getPort();
+
+                DatagramPacket packet = new DatagramPacket(buf, buf.length, address, seederPort);
+                socket.send(packet);
+
+                buf = new byte[4096];
+                packet = new DatagramPacket(buf, buf.length);
+                socket.setSoTimeout(60 * 1000); // 60 sec of timeout
+
+                // If we didn't send a stop command
+                if (!event.equals(PeerEvent.STOPPED)) {
+                    socket.receive(packet);
+                    json = new String(packet.getData(), 0, packet.getLength());
+
+                    TrackerResponse response = gson.fromJson(json, TrackerResponse.class);
+                    if (response.getFailureReason() == null) {
+
+                        synchronized (peer) {
+                            List<PeerAddress> addresses = peer.getAvailableUploaders();
+                            addresses.clear();
+                            addresses.addAll(response.getPeerAddresses());
+                            peer.setInterval(response.getInterval());
+                        }
+
+                    } else {
+                        peer.interrupt();
+                    }
                 }
             }
-            socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+            // we don't care a new message will be sent
+            LOGGER.info(e.getMessage());
+        } finally {
 
+            if (socket != null){
+                socket.close();
+            }
+        }
     }
 }

@@ -18,13 +18,11 @@ import java.util.List;
  */
 @Path("seeder")
 public class SeederRequest {
-    private SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
-
     // putting a param using query
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSeederList(@QueryParam("keywords") String keywords) {
+    public String getSeederList(@QueryParam("keywords") String keywords) throws InterruptedException {
         if(keywords == null){
             keywords = "";
         }
@@ -34,7 +32,11 @@ public class SeederRequest {
             strings = keywords.split("\\s");
         }
 
+        SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
+
         List<Seeder> seeders = factoryClient.listSeeders(strings);
+
+        factoryClient.shutdown();
 
         return new Gson().toJson(seeders);
     }

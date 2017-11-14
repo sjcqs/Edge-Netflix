@@ -1,7 +1,7 @@
 package client.cli.command;
 
 
-import client.RequestManager;
+import client.Client;
 import client.cli.Command;
 
 /**
@@ -12,7 +12,7 @@ public class HelpCommand extends Command {
     public static final String ANSI_PLAIN_TEXT = "\033[0;0m";
     public static final String ANSI_BOLD_TEXT = "\033[0;1m";
     @Override
-    public void run(RequestManager manager) {
+    public void run(Client client) {
         printHelp(false);
     }
 
@@ -52,8 +52,10 @@ public class HelpCommand extends Command {
                    "\t\tPlay NAME video using ffplay");
            System.out.println("\tsubscribe\n" +
                    "\t\tSubscribe to the portal to receive notifications of new and deleted streams");
+            System.out.println("\tstop\n" +
+                    "\t\tStop the current download(s)");
            System.out.println("\thelp\n" +
-                   "\t\tPrint the application's help");
+                   "\t\tPrint this");
            System.out.println("\texit\n" +
                    "\t\tExit the application");
         }

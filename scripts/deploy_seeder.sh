@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcloud compute scp seeder_factory/target/seeder_factory-1.0-SNAPSHOT.jar seeder-factory:~/seeder_factory.jar
+gcloud compute scp out/artifacts/seeder_factory_jar/seeder_factory.jar seeder-factory:~/seeder_factory.jar

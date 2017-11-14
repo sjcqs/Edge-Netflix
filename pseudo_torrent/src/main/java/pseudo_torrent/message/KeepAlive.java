@@ -1,15 +1,16 @@
 package pseudo_torrent.message;
 
+
 /**
  * Created by satyan on 11/9/17.
  */
 public class KeepAlive extends Message {
     public KeepAlive() {
-        super(-1);
+        super(Type.KEEP_ALIVE, null);
     }
 
     @Override
-    public String serialize() {
-        return gson.toJson(this);
+    public byte[] getBytes() {
+        return new byte[0];
     }
 }

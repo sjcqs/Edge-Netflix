@@ -34,6 +34,8 @@ public class CommandParser {
             return new HelpCommand();
         } else if (command.equals("exit")){
             return new ExitCommand();
+        } else if (command.equals("stop")) {
+            return new StopCommand();
         } else {
             throw new IllegalArgumentException(
                     HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +

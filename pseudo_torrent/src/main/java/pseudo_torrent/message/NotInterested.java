@@ -5,12 +5,7 @@ package pseudo_torrent.message;
  */
 public class NotInterested extends Message {
 
-    public NotInterested() {
-        super(NOT_INTERESTED_ID);
-    }
-
-    @Override
-    public String serialize() {
-        return gson.toJson(this);
+    public NotInterested( String id) {
+        super(Type.NOT_INTERESTED, id);
     }
 }

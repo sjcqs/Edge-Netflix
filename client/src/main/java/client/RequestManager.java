@@ -34,7 +34,7 @@ public class RequestManager {
         return null;
     }
 
-    public void start() throws Exception {
+    public void run() throws Exception {
         if (!client.isStarted()){
             client.start();
         }

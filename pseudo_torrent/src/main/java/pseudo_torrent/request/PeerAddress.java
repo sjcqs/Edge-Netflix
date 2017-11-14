@@ -1,28 +1,34 @@
 package pseudo_torrent.request;
 
+import java.net.InetAddress;
+
 /**
  * Created by satyan on 11/9/17.
  */
 public class PeerAddress {
-    private String name;
-    private String address;
+    private String id;
+    private InetAddress address;
     private int port;
 
-    public PeerAddress(String name, String address, int port) {
-        this.name = name;
+    public PeerAddress(String id, InetAddress address, int port) {
+        this.id = id;
         this.address = address;
         this.port = port;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public String getAddress() {
+    public InetAddress getAddress() {
         return address;
     }
 
     public int getPort() {
         return port;
+    }
+
+    public boolean match(String id){
+        return id.equals(this.id);
     }
 }

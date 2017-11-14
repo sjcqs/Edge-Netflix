@@ -1,13 +1,11 @@
 package client.cli;
 
-import client.RequestManager;
-
-import java.io.UnsupportedEncodingException;
+import client.Client;
 
 /**
  * Created by satyan on 10/19/17.
  * Interface for executable commands
  */
 public interface Executable {
-    void run(RequestManager manager) throws Exception;
+    void run(Client client) throws Exception;
 }

@@ -20,8 +20,6 @@ import java.util.List;
  */
 @Path("video")
 public class VideoRequest {
-    private SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
-
     @GET
     @Path("download")
     @Produces(MediaType.TEXT_PLAIN)
@@ -45,7 +43,7 @@ public class VideoRequest {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getVideoList(@QueryParam("keywords") String keywords) {
+    public String getVideoList(@QueryParam("keywords") String keywords) throws InterruptedException {
         if(keywords == null){
             keywords = "";
         }
@@ -55,8 +53,11 @@ public class VideoRequest {
             strings = keywords.split("\\s");
         }
 
+        SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
+
         List<Video> videos = factoryClient.listVideos(strings);
 
+        factoryClient.shutdown();
         return new Gson().toJson(videos);
     }
 }

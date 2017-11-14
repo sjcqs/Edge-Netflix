@@ -1,13 +1,12 @@
 package client.cli.command;
 
-import client.RequestManager;
+import client.Client;
 import client.cli.Command;
 import model.Video;
 import model.util.VideoUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public class PlayVideoCommand extends Command {
         name = str.trim();
     }
     @Override
-    public void run(RequestManager manager) {
+    public void run(Client client) {
         Video video = VideoUtil.getVideo(name, false);
         if (video != null) {
             System.out.println(HelpCommand.ANSI_BOLD_TEXT + "PLAYING" + HelpCommand.ANSI_PLAIN_TEXT);

@@ -1,5 +1,6 @@
 package client.cli.command;
 
+import client.Client;
 import client.RequestManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,8 +27,9 @@ public class ListSeedersCommand extends ListCommand {
     }
 
     @Override
-    public void run(RequestManager manager) throws UnsupportedEncodingException {
-        ContentResponse response = manager.sendRequest(address + query);
+    public void run(Client client) throws UnsupportedEncodingException {
+        RequestManager requestManager = client.getRequestManager();
+        ContentResponse response = requestManager.sendRequest(address + query);
         if (response.getStatus() == 200) {
             String json = response.getContentAsString();
             Type listType = new TypeToken<List<Seeder>>(){}.getType();
