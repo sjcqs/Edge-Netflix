@@ -5,6 +5,7 @@ package route;
 
 public final class SeederFactoryProto {
   private SeederFactoryProto() {}
+
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }

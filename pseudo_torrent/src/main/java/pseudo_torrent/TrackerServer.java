@@ -129,7 +129,6 @@ public class TrackerServer extends Thread{
 
                         addresses.add(peer);
                     }
-                    seederServer.setPeers(addresses);
                     addresses.add(seederServer.getAddress());
                     statement.close();
 

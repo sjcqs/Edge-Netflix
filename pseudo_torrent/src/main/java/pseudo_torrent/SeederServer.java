@@ -1,5 +1,6 @@
 package pseudo_torrent;
 
+import model.FixedBitSet;
 import model.Seeder;
 import model.Video;
 import model.util.VideoUtil;
@@ -10,6 +11,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  * Created by satyan on 11/10/17.
@@ -24,6 +26,8 @@ public class SeederServer extends Thread {
     private final Map<String, CommunicationTable> tableMap = new HashMap<>();
     private final BitSet field;
     private final Postman postman = Postman.getInstance();
+    private Random random = new Random(System.currentTimeMillis());
+
 
 
     private final Message choke;
@@ -33,7 +37,6 @@ public class SeederServer extends Thread {
     private final Message handshake;
     private final Message keepAlive;
 
-    private List<PeerAddress> peers;
     private final MessageHandler handler = new MessageHandler() {
 
         @Override
@@ -67,8 +70,17 @@ public class SeederServer extends Thread {
                 state.setInterested(true);
                 if (!state.isChoked()) {
                     if (!table.getMyState().isChoked()) {
-                        LOGGER.info("MYFIELD " + field.size());
-                        postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myAddr.getId(), field));
+                        // each set bit has a certain probability to be sent
+                        BitSet set = new BitSet(field.size());
+                        IntStream in = field.stream();
+                        Iterator<Integer> it = in.iterator();
+                        while (it.hasNext()){
+                            int index = it.next();
+                            if (random.nextInt(100) < 65){
+                                set.set(index, true);
+                            }
+                        }
+                        postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myAddr.getId(), set));
                     }
                 }
             }
@@ -165,7 +177,6 @@ public class SeederServer extends Thread {
         LOGGER.info("Chunks: " + video.getChunkCount());
         field.flip(0,video.getChunkCount());
         int uploadPort = socket.getLocalPort();
-        Random random = new Random(System.currentTimeMillis());
         String id = String.format("SED%017d",random.nextInt(1000));
         this.myAddr = new PeerAddress(id, seeder.getInetAddres(), uploadPort);
 
@@ -196,16 +207,6 @@ public class SeederServer extends Thread {
                 long current = System.currentTimeMillis();
                 if (lastContact - current > 60_000){
                     lastContact = current;
-                    if (peers != null) {
-                        for (PeerAddress peer : peers) {
-                            // try to get their bitfields
-                            if (tableMap.containsKey(peer.getId())) {
-                                if (!tableMap.get(peer.getId()).getMyState().isChoked()) {
-                                    postman.send(socket, peer.getAddress(), peer.getPort(), interested);
-                                }
-                            }
-                        }
-                    }
                 }
             } catch (SocketTimeoutException e) {
                 LOGGER.info("Timeout");
@@ -221,9 +222,5 @@ public class SeederServer extends Thread {
             LOGGER.info("Received " + msg.getType() + " from " + msg.getSenderId());
             handler.handle(msg);
         }
-    }
-
-    public void setPeers(List<PeerAddress> peers) {
-        this.peers = peers;
     }
 }

@@ -436,6 +436,10 @@ public class Peer extends Thread{
                     } else if (!myState.isChoked()){
                         if (!myState.isInterested()){
                             LOGGER.info("INTERESTED ON MY OWN");
+                            if (!diff(table).isEmpty() || random.nextInt(10) == 1) {
+                                postman.send(socket, uploader.getAddress(), uploader.getPort(), interested);
+                                table.getMyState().setInterested(true);
+                            }
                         } else {
                             if (!awaitingRequests.containsKey(uploader.getId())){
                                 createRequestQueue(uploader);
