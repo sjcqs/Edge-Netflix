@@ -81,7 +81,7 @@ public class Peer extends Thread{
             if (table != null) {
                 PeerState peerState = table.getPeerState();
                 table.getMyState().setChoked(false);
-                PeerAddress downloader = getPeer(id, downloaders);
+                PeerAddress downloader = getPeer(id, waitingDownloaders);
                 PeerAddress uploader = getPeer(id, uploaders);
 
                 if (peerState.isChoked()) {
@@ -632,5 +632,9 @@ public class Peer extends Thread{
     public void closeCleanly(){
         trackerThread.interrupt();
         Thread.currentThread().interrupt();
+    }
+
+    public void setAvailableUploaders(List<PeerAddress> availableUploaders) {
+        this.availableUploaders = availableUploaders;
     }
 }

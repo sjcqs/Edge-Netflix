@@ -23,7 +23,7 @@ public class TrackerClient  implements Runnable{
     private PeerEvent event = PeerEvent.STARTED;
     private final Seeder seeder;
 
-    public TrackerClient(Peer peer, boolean stop) {
+    public TrackerClient(final Peer peer, boolean stop) {
         this.peer = peer;
         this.seeder = peer.getSeeder();
         peerId = peer.getPeerId();
@@ -87,9 +87,7 @@ public class TrackerClient  implements Runnable{
                     if (response.getFailureReason() == null) {
 
                         synchronized (peer) {
-                            List<PeerAddress> addresses = peer.getAvailableUploaders();
-                            addresses.clear();
-                            addresses.addAll(response.getPeerAddresses());
+                            peer.setAvailableUploaders(response.getPeerAddresses());
                             peer.setInterval(response.getInterval());
                         }
 
