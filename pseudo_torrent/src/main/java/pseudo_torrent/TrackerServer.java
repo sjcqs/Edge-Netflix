@@ -114,6 +114,7 @@ public class TrackerServer extends Thread{
                     List<PeerAddress> addresses = new ArrayList<>();
 
                     // Get the PEER_SENT last updated peers
+                    addresses.add(seederServer.getAddress());
                     statement = connection
                             .prepareStatement("SELECT * FROM peer WHERE peer_id <> ? AND checksum = ? ORDER BY updated DESC LIMIT ?");
                     statement.setString(1, request.getPeerId());
@@ -129,7 +130,7 @@ public class TrackerServer extends Thread{
 
                         addresses.add(peer);
                     }
-                    addresses.add(seederServer.getAddress());
+
                     statement.close();
 
                     // Get the number of complete and incomplete peer'sdownloads

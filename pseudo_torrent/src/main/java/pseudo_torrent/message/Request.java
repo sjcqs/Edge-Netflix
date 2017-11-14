@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
  * Request a piece of chunk
  */
 public class Request extends Message {
-    public static final int BLOCK_SIZE = 16_384;
+    public static final int BLOCK_SIZE = 32_768;
     private int index;  // The chunk index
     private long offset; // Offset in bytes
     private int length = BLOCK_SIZE; // Length requested

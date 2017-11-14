@@ -13,7 +13,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.function.IntConsumer;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -27,7 +26,7 @@ public class Peer extends Thread{
     private final static Logger LOGGER = Logger.getLogger(Peer.class.getName());
     private static final int DOWNLOADER_COUNT = 4;
     private static final int UPLOADER_COUNT = 3;
-    private static final long SHUFFLE_INTERVAL = 60_000;
+    private static final long SHUFFLE_INTERVAL = 30_000;
 
     private final Message choke;
     private final Message unchoke;
@@ -81,25 +80,18 @@ public class Peer extends Thread{
             if (table != null) {
                 PeerState peerState = table.getPeerState();
                 table.getMyState().setChoked(false);
-                PeerAddress downloader = getPeer(id, waitingDownloaders);
-                PeerAddress uploader = getPeer(id, uploaders);
-
                 if (peerState.isChoked()) {
+                    PeerAddress downloader = getPeer(id, downloaders);
                     if (downloader != null) {
                         postman.send(socket, msg.getAddress(), msg.getPort(), unchoke);
                         table.getPeerState().setChoked(false);
-
-                        postman.send(socket, msg.getAddress(), msg.getPort(), interested);
-                        table.getMyState().setInterested(true);
                     }
                 } else {
+                    PeerAddress uploader = getPeer(id, uploaders);
                     if (uploader != null){
                         LOGGER.info("INTERESTED AFTER UNCHOKE");
                         postman.send(socket, msg.getAddress(), msg.getPort(), interested);
                         table.getMyState().setInterested(true);
-                    }
-                    if (downloader != null){
-                        postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myId, field));
                     }
                 }
             }
@@ -112,8 +104,10 @@ public class Peer extends Thread{
                 CommunicationTable table = tableMap.get(senderId);
                 PeerState state = table.getPeerState();
                 state.setInterested(true);
-                if (!table.getMyState().isChoked()) {
-                    postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myId, field));
+                if (!state.isChoked()) {
+                    if (!table.getMyState().isChoked()) {
+                        postman.send(socket, msg.getAddress(), msg.getPort(), new BitField(myId, field));
+                    }
                 }
             }
         }
@@ -210,6 +204,11 @@ public class Peer extends Thread{
                         final int length = msg.getLength();
 
                         Chunk chunk = downloadingChunks.get(index);
+                        if (chunk == null) {
+                            String checksum = video.getChecksums().get(index);
+                            chunk = new Chunk(index, checksum, video.getChunkSize(index));
+                            downloadingChunks.set(index, chunk);
+                        }
                         LOGGER.info("CHUNK: " + chunk.getIndex());
                         chunk.put(msg.getData(), 0, length);
                         LOGGER.info("PUT DATA");
@@ -297,7 +296,6 @@ public class Peer extends Thread{
     private Thread trackerThread;
     private Request lastRequest;
     private boolean downloaded = false;
-    private Map<Request, Long> requestDates = new HashMap<>();
 
     public Peer(Seeder seeder){
         setDefaultUncaughtExceptionHandler((thread, throwable) -> LOGGER.info(throwable.getMessage()));
@@ -322,8 +320,7 @@ public class Peer extends Thread{
         handshake = new Handshake(myId, video.getChecksum());
         downloadingChunks = new ArrayList<>(video.getChunkCount());
         for (int i = 0; i < video.getChunkCount(); i++) {
-            String checksum = video.getChecksums().get(i);
-            downloadingChunks.add(new Chunk(i, checksum, video.getChunkSize(i)));
+            downloadingChunks.add(null);
             chunkLeft.add(i);
         }
     }
@@ -372,7 +369,7 @@ public class Peer extends Thread{
 
         try {
             socket = new DatagramSocket(0);
-            socket.setSoTimeout(60_000);
+            socket.setSoTimeout(20_000);
             this.uploadPort = socket.getLocalPort();
         } catch (SocketException e) {
             System.out.println("ERROR: cannot download the video");
@@ -389,21 +386,10 @@ public class Peer extends Thread{
                 BitSet res = VideoUtil.createVideoFile(video);
                 if (res.cardinality() == video.getChunkCount()){
                     downloaded = true;
+
                 } else {
                     field = res;
-                    field.stream().iterator().forEachRemaining((IntConsumer) chunkLeft::add);
                 }
-            }
-
-            LOGGER.info("MESSAGE TREATED");
-
-            if (!downloaded) {
-                contactUploaders();
-            }
-            long currentMilis = System.currentTimeMillis();
-            if (currentMilis - lastShuffle < SHUFFLE_INTERVAL) {
-                lastShuffle = currentMilis;
-                downloaders = shuffle(waitingDownloaders, downloaders, DOWNLOADER_COUNT);
             }
 
             try {
@@ -413,6 +399,16 @@ public class Peer extends Thread{
 
             if (msg != null) {
                 handler.handle(msg);
+            }
+            LOGGER.info("MESSAGE TREATED");
+
+            if (!downloaded) {
+                contactUploaders();
+            }
+            long currentMilis = System.currentTimeMillis();
+            if (currentMilis - lastShuffle < SHUFFLE_INTERVAL) {
+                lastShuffle = currentMilis;
+                downloaders = shuffle(waitingDownloaders, downloaders, DOWNLOADER_COUNT);
             }
         }
     }
@@ -437,14 +433,9 @@ public class Peer extends Thread{
                     if (state.isChoked()){
                         postman.send(socket, uploader.getAddress(), uploader.getPort(), unchoke);
                         state.setChoked(false);
-                    }
-                    if (!myState.isChoked()){
+                    } else if (!myState.isChoked()){
                         if (!myState.isInterested()){
                             LOGGER.info("INTERESTED ON MY OWN");
-                            if (!diff(table).isEmpty() || random.nextInt(10) == 1) {
-                                postman.send(socket, uploader.getAddress(), uploader.getPort(), interested);
-                                table.getMyState().setInterested(true);
-                            }
                         } else {
                             if (!awaitingRequests.containsKey(uploader.getId())){
                                 createRequestQueue(uploader);
@@ -466,13 +457,11 @@ public class Peer extends Thread{
             Deque<Request> requests = awaitingRequests.get(uploader.getId());
             Request request = requests.peekFirst();
             if (request != null ) {
-                long current = System.currentTimeMillis();
-                if (lastRequest != null && lastRequest.equals(request) && current - requestDates.get(lastRequest) < 45_000){
+                if (lastRequest != null && lastRequest.equals(request)){
                     return false;
                 }
                 LOGGER.info("Send request (first): \n index: " + request.getIndex() + " offset: " + request.getOffset());
                 lastRequest =  request;
-                requestDates.put(lastRequest, current);
                 postman.send(socket, uploader.getAddress(), uploader.getPort(), request);
                 return true;
             }
@@ -488,8 +477,7 @@ public class Peer extends Thread{
         int index = rarestChunkIndex(tableMap.get(uploader.getId()));
         Deque<Request> requests = new LinkedList<>();
         if (index >= 0) {
-            Chunk chunk = downloadingChunks.get(index);
-            int start = index * VideoUtil.CHUNK_SIZE + chunk.getPosition();
+            int start = index * VideoUtil.CHUNK_SIZE;
             int end = Math.toIntExact(Math.min((index + 1) * VideoUtil.CHUNK_SIZE, video.getLength()));
             for (int offset = start; offset < end; offset += Request.BLOCK_SIZE) {
                 Request request;
@@ -566,9 +554,9 @@ public class Peer extends Thread{
      * TODO select using upload/download rate
      */
     private List<PeerAddress> shuffle(List<PeerAddress> fromList, List<PeerAddress> toList, int maxSize) {
-        List<PeerAddress> nextPeers = new ArrayList<>(maxSize);
         if (!fromList.isEmpty()){
             List<PeerAddress> deck = new ArrayList<>(fromList);
+            List<PeerAddress> nextPeers = new ArrayList<>(maxSize);
             while (!deck.isEmpty() && nextPeers.size() < maxSize){
                 int index = random.nextInt(deck.size());
                 PeerAddress peer = deck.remove(index);
@@ -580,13 +568,16 @@ public class Peer extends Thread{
             // CHOKE PEERS TO BE CHOKE
             toList.removeAll(nextPeers);
             for (PeerAddress peer : toList) {
-                awaitingRequests.remove(peer.getId());
                 LOGGER.info("REMOVE: " + peer.getId());
                 postman.send(socket, peer.getAddress(), peer.getPort(), choke);
                 tableMap.get(peer.getId()).getPeerState().setChoked(true);
             }
+            toList.clear();
+
+            // New selected peers
+            toList.addAll(nextPeers);
         }
-        return nextPeers;
+        return toList;
     }
 
     private boolean unchoke(PeerAddress peer)  {
@@ -632,9 +623,5 @@ public class Peer extends Thread{
     public void closeCleanly(){
         trackerThread.interrupt();
         Thread.currentThread().interrupt();
-    }
-
-    public void setAvailableUploaders(List<PeerAddress> availableUploaders) {
-        this.availableUploaders = availableUploaders;
     }
 }
