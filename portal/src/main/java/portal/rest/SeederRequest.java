@@ -1,6 +1,8 @@
 package portal.rest;
 
+import com.google.gson.Gson;
 import model.Seeder;
+import portal.Portal;
 import portal.seeder.SeederFactoryClient;
 
 import javax.ws.rs.GET;
@@ -16,13 +18,11 @@ import java.util.List;
  */
 @Path("seeder")
 public class SeederRequest {
-    private SeederFactoryClient factoryClient = SeederFactoryClient.getInstance();
-
     // putting a param using query
     @GET
     @Path("list")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getSeederList(@QueryParam("keywords") String keywords) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSeederList(@QueryParam("keywords") String keywords) throws InterruptedException {
         if(keywords == null){
             keywords = "";
         }
@@ -32,15 +32,12 @@ public class SeederRequest {
             strings = keywords.split("\\s");
         }
 
-        List<Seeder> seeders = factoryClient.listSeeders(strings);
-        if (seeders.isEmpty()){
-            return "No seeders";
-        }
-        String listString = "";
-        for (Seeder seeder : seeders) {
-            listString += "+ " + seeder + ";\n";
-        }
+        SeederFactoryClient factoryClient = Portal.getInstance().getFactoryClient();
 
-        return listString;
+        List<Seeder> seeders = factoryClient.listSeeders(strings);
+
+        factoryClient.shutdown();
+
+        return new Gson().toJson(seeders);
     }
 }

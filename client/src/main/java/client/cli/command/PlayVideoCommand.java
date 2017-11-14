@@ -1,13 +1,12 @@
 package client.cli.command;
 
-import client.RequestManager;
+import client.Client;
 import client.cli.Command;
 import model.Video;
 import model.util.VideoUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +19,9 @@ public class PlayVideoCommand extends Command {
         super(args);
         if (args == null || args.isEmpty()){
             throw new IllegalArgumentException(
-                    "ERROR\n" +
+                    HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                             "\tName of the video to play must be provided\n" +
-                            "USAGE\n" +
+                            HelpCommand.ANSI_BOLD_TEXT + "USAGE" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                             "\tplay VIDEO"
             );
         }
@@ -30,11 +29,12 @@ public class PlayVideoCommand extends Command {
         for (String arg : args) {
             str += arg + " ";
         }
-        name = str.substring(0,str.length() - 1);
+        name = str.trim();
     }
     @Override
-    public void run(RequestManager manager) {
-        Video video = VideoUtil.getVideo(name);
+    public void run(Client client) {
+        Video video = VideoUtil.getVideo(name, false);
+
         if (video != null) {
             System.out.println(HelpCommand.ANSI_BOLD_TEXT + "PLAYING" + HelpCommand.ANSI_PLAIN_TEXT);
             System.out.println("\t" + video.getName() + " - " + video.getFormattedDuration());
@@ -42,16 +42,9 @@ public class PlayVideoCommand extends Command {
         } else {
             System.out.println(HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT);
             System.out.println("\tVideo not found.");
-            System.out.println("\tType 'list files' to get the available videos.");
+            System.out.println("\tType 'list files' to get all available videos.");
         }
-    }
 
-    public static void main(String args[]){
-        assert args.length == 1;
-        List<String> kw = new ArrayList<>();
-        kw.add("Comedy");
-        Video video = new Video(args[0], args[0], "321x240", 63, kw);
-        playVideo(video);
     }
 
     private static void playVideo(Video video){

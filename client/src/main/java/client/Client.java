@@ -2,6 +2,7 @@ package client;
 
 import client.cli.CommandParser;
 import client.cli.command.HelpCommand;
+import com.sun.media.jfxmedia.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,16 @@ import java.util.Arrays;
  * client.Client
  * TODO: Add RESTManager to centralize REST info (ip, port, data, etc)
  */
-public class Client {
+public class Client implements Runnable {
+
+
+    private final DownloadManager downloadManager;
+    private final RequestManager requestManager;
+
+    public Client(String url) {
+        downloadManager = new DownloadManager();
+        requestManager = new RequestManager("http://" + url,8080);
+    }
 
     public static void main(String[] args){
         if (args.length != 1){
@@ -23,10 +33,28 @@ public class Client {
         }
         //http://35.195.238.86
         String url = args[0];
-        RequestManager requestManager = null;
+        new Client(url).run();
+    }
+
+    /**
+     * Exit the application and clean what's needed to be cleaned
+     */
+    public void exit() {
         try {
-            requestManager = new RequestManager("http://" + url,8080);
-            requestManager.start();
+            requestManager.stop();
+            downloadManager.stop();
+        } catch (Exception ignored) {
+        }
+        System.exit(0);
+    }
+
+    @Override
+    public void run() {
+        Logger.setLevel(Logger.DEBUG);
+        // Add hook to get a few signals
+
+        try {
+            requestManager.run();
             HelpCommand.printHelp(true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
             boolean stop = false;
@@ -40,7 +68,7 @@ public class Client {
                     String[] arguments = input.split("\\s");
                     try {
                         CommandParser.parse(Arrays.asList(arguments))
-                                .run(requestManager);
+                                .run(this);
                     } catch (IllegalArgumentException e) {
                         System.out.println();
                         System.out.println(e.getLocalizedMessage());
@@ -51,19 +79,28 @@ public class Client {
                 }
             }
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
             System.exit(1);
         } catch (IOException e) {
+            e.printStackTrace();
             System.exit(2);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (requestManager != null){
-                try {
-                    requestManager.stop();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                requestManager.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+        exit();
+    }
+
+    public DownloadManager getDownloadManager() {
+        return downloadManager;
+    }
+
+    public RequestManager getRequestManager() {
+        return requestManager;
     }
 }

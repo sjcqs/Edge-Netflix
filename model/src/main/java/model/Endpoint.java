@@ -6,13 +6,13 @@ import route.EndpointMessage;
 public class Endpoint implements Convertible<EndpointMessage> {
     @SerializedName("transport")
     private String transport = "tcp";
-    @SerializedName("ip")
-    private String ip;
+    @SerializedName("address")
+    private String address;
     @SerializedName("port")
     private int port;
 
-    public Endpoint(String ip, int port){
-        this.ip = ip;
+    public Endpoint(String address, int port){
+        this.address = address;
         this.port = port;
         if(!(port >= 0 && port <= 65535)){
             throw new IllegalArgumentException("Invalid Port number");
@@ -20,7 +20,7 @@ public class Endpoint implements Convertible<EndpointMessage> {
     }
 
     public Endpoint(EndpointMessage endpointMessage) {
-        this.ip = endpointMessage.getIp();
+        this.address = endpointMessage.getIp();
         this.transport = endpointMessage.getTransport();
         this.port = endpointMessage.getPort();
     }
@@ -29,8 +29,8 @@ public class Endpoint implements Convertible<EndpointMessage> {
         return transport;
     }
 
-    public String getIp() {
-        return ip;
+    public String getAddress() {
+        return address;
     }
 
     public int getPort() {
@@ -40,7 +40,7 @@ public class Endpoint implements Convertible<EndpointMessage> {
     public EndpointMessage convert() {
         return EndpointMessage.newBuilder()
                 .setTransport(transport)
-                .setIp(ip)
+                .setIp(address)
                 .setPort(port)
                 .build();
     }

@@ -24,7 +24,7 @@ public class CommandParser {
             return new DownloadFileCommand(params);
         } else if (args.size() > 1 && command.equals("list") && args.get(1).equals("files")) {
             return new ListFilesCommand();
-        } else if (command.equals("model")) {
+        } else if (command.equals("info")) {
             return new FileInformationCommand(params);
         } else if (command.equals("play")) {
             return new PlayVideoCommand(params);
@@ -34,16 +34,20 @@ public class CommandParser {
             return new HelpCommand();
         } else if (command.equals("exit")){
             return new ExitCommand();
+        } else if (command.equals("stop")) {
+            return new StopCommand();
         } else {
-            throw new IllegalArgumentException("This command doesn't exist");
+            throw new IllegalArgumentException(
+                    HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
+                    "\tThis command doesn't exist");
         }
     }
 
     private static ListVideosCommand parseVideo(List<String> args) throws IllegalArgumentException{
         IllegalArgumentException ex = new IllegalArgumentException(
-                "ERROR\n" +
+                HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                         "\tUnknown video command\n" +
-                        "USAGE\n" +
+                        HelpCommand.ANSI_BOLD_TEXT + "USAGE" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                         "\tvideo list\n" +
                         "\t\tPrint all available videos\n" +
                         "\tvideo search KEYWORDS\n" +
@@ -63,9 +67,9 @@ public class CommandParser {
 
     private static ListSeedersCommand parseSeeder(List<String> args) throws IllegalArgumentException{
         IllegalArgumentException ex = new IllegalArgumentException(
-                "ERROR\n" +
+                HelpCommand.ANSI_BOLD_TEXT + "ERROR" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                         "\tUnknown seeder command\n" +
-                        "USAGE\n" +
+                        HelpCommand.ANSI_BOLD_TEXT + "USAGE" + HelpCommand.ANSI_PLAIN_TEXT + "\n" +
                         "\tseeder list\n" +
                         "\t\tPrint all available seeders\n" +
                         "\tseeder search KEYWORDS\n" +

@@ -28,14 +28,14 @@ public final class SeederFactoryGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<route.VideoMessage,
+  public static final io.grpc.MethodDescriptor<route.KeywordsMessage,
       route.SeederMessage> METHOD_CREATE_SEEDER =
-      io.grpc.MethodDescriptor.<route.VideoMessage, route.SeederMessage>newBuilder()
+      io.grpc.MethodDescriptor.<route.KeywordsMessage, route.SeederMessage>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "route.SeederFactory", "CreateSeeder"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              route.VideoMessage.getDefaultInstance()))
+              route.KeywordsMessage.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               route.SeederMessage.getDefaultInstance()))
           .setSchemaDescriptor(new SeederFactoryMethodDescriptorSupplier("CreateSeeder"))
@@ -52,6 +52,19 @@ public final class SeederFactoryGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               route.SeederMessage.getDefaultInstance()))
           .setSchemaDescriptor(new SeederFactoryMethodDescriptorSupplier("ListSeeders"))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<route.KeywordsMessage,
+      route.VideoMessage> METHOD_LIST_VIDEOS =
+      io.grpc.MethodDescriptor.<route.KeywordsMessage, route.VideoMessage>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+          .setFullMethodName(generateFullMethodName(
+              "route.SeederFactory", "ListVideos"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              route.KeywordsMessage.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              route.VideoMessage.getDefaultInstance()))
+          .setSchemaDescriptor(new SeederFactoryMethodDescriptorSupplier("ListVideos"))
           .build();
 
   /**
@@ -87,7 +100,7 @@ public final class SeederFactoryGrpc {
      * Ask to create the seeder for the given video and returns the created seeder in return
      * </pre>
      */
-    public void createSeeder(route.VideoMessage request,
+    public void createSeeder(route.KeywordsMessage request,
         io.grpc.stub.StreamObserver<route.SeederMessage> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_CREATE_SEEDER, responseObserver);
     }
@@ -102,13 +115,20 @@ public final class SeederFactoryGrpc {
       asyncUnimplementedUnaryCall(METHOD_LIST_SEEDERS, responseObserver);
     }
 
+    /**
+     */
+    public void listVideos(route.KeywordsMessage request,
+        io.grpc.stub.StreamObserver<route.VideoMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_LIST_VIDEOS, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
             METHOD_CREATE_SEEDER,
             asyncUnaryCall(
               new MethodHandlers<
-                route.VideoMessage,
+                route.KeywordsMessage,
                 route.SeederMessage>(
                   this, METHODID_CREATE_SEEDER)))
           .addMethod(
@@ -118,6 +138,13 @@ public final class SeederFactoryGrpc {
                 route.KeywordsMessage,
                 route.SeederMessage>(
                   this, METHODID_LIST_SEEDERS)))
+          .addMethod(
+            METHOD_LIST_VIDEOS,
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                route.KeywordsMessage,
+                route.VideoMessage>(
+                  this, METHODID_LIST_VIDEOS)))
           .build();
     }
   }
@@ -146,7 +173,7 @@ public final class SeederFactoryGrpc {
      * Ask to create the seeder for the given video and returns the created seeder in return
      * </pre>
      */
-    public void createSeeder(route.VideoMessage request,
+    public void createSeeder(route.KeywordsMessage request,
         io.grpc.stub.StreamObserver<route.SeederMessage> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CREATE_SEEDER, getCallOptions()), request, responseObserver);
@@ -161,6 +188,14 @@ public final class SeederFactoryGrpc {
         io.grpc.stub.StreamObserver<route.SeederMessage> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(METHOD_LIST_SEEDERS, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void listVideos(route.KeywordsMessage request,
+        io.grpc.stub.StreamObserver<route.VideoMessage> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(METHOD_LIST_VIDEOS, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -188,7 +223,7 @@ public final class SeederFactoryGrpc {
      * Ask to create the seeder for the given video and returns the created seeder in return
      * </pre>
      */
-    public route.SeederMessage createSeeder(route.VideoMessage request) {
+    public route.SeederMessage createSeeder(route.KeywordsMessage request) {
       return blockingUnaryCall(
           getChannel(), METHOD_CREATE_SEEDER, getCallOptions(), request);
     }
@@ -202,6 +237,14 @@ public final class SeederFactoryGrpc {
         route.KeywordsMessage request) {
       return blockingServerStreamingCall(
           getChannel(), METHOD_LIST_SEEDERS, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public java.util.Iterator<route.VideoMessage> listVideos(
+        route.KeywordsMessage request) {
+      return blockingServerStreamingCall(
+          getChannel(), METHOD_LIST_VIDEOS, getCallOptions(), request);
     }
   }
 
@@ -230,7 +273,7 @@ public final class SeederFactoryGrpc {
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<route.SeederMessage> createSeeder(
-        route.VideoMessage request) {
+        route.KeywordsMessage request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_CREATE_SEEDER, getCallOptions()), request);
     }
@@ -238,6 +281,7 @@ public final class SeederFactoryGrpc {
 
   private static final int METHODID_CREATE_SEEDER = 0;
   private static final int METHODID_LIST_SEEDERS = 1;
+  private static final int METHODID_LIST_VIDEOS = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -257,12 +301,16 @@ public final class SeederFactoryGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_CREATE_SEEDER:
-          serviceImpl.createSeeder((route.VideoMessage) request,
+          serviceImpl.createSeeder((route.KeywordsMessage) request,
               (io.grpc.stub.StreamObserver<route.SeederMessage>) responseObserver);
           break;
         case METHODID_LIST_SEEDERS:
           serviceImpl.listSeeders((route.KeywordsMessage) request,
               (io.grpc.stub.StreamObserver<route.SeederMessage>) responseObserver);
+          break;
+        case METHODID_LIST_VIDEOS:
+          serviceImpl.listVideos((route.KeywordsMessage) request,
+              (io.grpc.stub.StreamObserver<route.VideoMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -327,6 +375,7 @@ public final class SeederFactoryGrpc {
               .setSchemaDescriptor(new SeederFactoryFileDescriptorSupplier())
               .addMethod(METHOD_CREATE_SEEDER)
               .addMethod(METHOD_LIST_SEEDERS)
+              .addMethod(METHOD_LIST_VIDEOS)
               .build();
         }
       }

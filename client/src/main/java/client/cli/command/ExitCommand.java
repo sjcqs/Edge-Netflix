@@ -1,6 +1,6 @@
 package client.cli.command;
 
-import client.RequestManager;
+import client.Client;
 import client.cli.Command;
 
 /**
@@ -10,9 +10,8 @@ import client.cli.Command;
 public class ExitCommand extends Command {
 
     @Override
-    public void run(RequestManager manager) throws Exception {
-        manager.stop();
-        System.exit(0);
+    public void run(Client client) throws Exception {
+        client.exit();
     }
 
 }

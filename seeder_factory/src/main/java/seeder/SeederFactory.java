@@ -4,16 +4,22 @@ package seeder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import route.EndpointMessage;
+import model.Seeder;
+import model.Video;
+import model.util.VideoUtil;
+import pseudo_torrent.SeederServer;
 import route.KeywordsMessage;
 import route.SeederFactoryGrpc.SeederFactoryImplBase;
 import route.SeederMessage;
 import route.VideoMessage;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +33,7 @@ class SeederFactory {
     private final Server server;
 
 
-    /** Create a RouteGuide server listening on {@code port} using {@code featureFile} database. */
+    /** Create a RouteGuide server listening on {@code uploadPort} using {@code featureFile} database. */
     SeederFactory(int port) throws IOException {
         this(ServerBuilder.forPort(port), port);
     }
@@ -67,52 +73,120 @@ class SeederFactory {
     }
 
     private static class SeederFactoryService extends SeederFactoryImplBase{
-        private final List<SeederMessage> seederMessages = new LinkedList<>();
+        //private static final String SEEDER_FACTORY_ADDRESS = "35.187.4.11";
+        private static final String SEEDER_FACTORY_ADDRESS = "localhost";
+        private final List<Seeder> seeders = new LinkedList<>();
+        private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
         @Override
-        public void createSeeder(VideoMessage request, StreamObserver<SeederMessage> responseObserver) {
-            // TODO create a new seederMessage and add the real port
-            SeederMessage.Builder builder = SeederMessage.newBuilder();
-            EndpointMessage.Builder endpointBuilder = EndpointMessage.newBuilder();
-            endpointBuilder.setIp("localhost");
-            endpointBuilder.setPort(1002);
-            endpointBuilder.setTransport("tcp");
-            builder.setVideo(request);
-            builder.setEndpoint(endpointBuilder.build());
+        public void createSeeder(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
+            if (request.getKeywordCount() > 0) {
+                List<String> keywords = request.getKeywordList();
+                String keyword = "";
+                for (String str : keywords) {
+                    keyword += str + " ";
+                }
+                keyword = keyword.trim();
+                Video video = VideoUtil.getVideo(keyword, true);
+                if (video != null) {
+                    logger.info("Video wanted: " + video.getName());
+                    // Search if the seeder is already running
+                    boolean found = false;
+                    for (Seeder seeder : seeders) {
+                        if (seeder.getVideo().equals(video)){
+                            logger.info("Get a seeder on: " + seeder.getPort());
+                            responseObserver.onNext(seeder.convert());
+                            found = true;
+                        }
+                    }
 
-            SeederMessage seederMessage = builder.build();
-            seederMessages.add(seederMessage);
-            responseObserver.onNext(seederMessage);
+                    if (!found) {
+                        SeederServer seederServer = null;
+                        try {
+                            seederServer = new SeederServer(SEEDER_FACTORY_ADDRESS, video);
+                            threadPool.submit(seederServer);
+                        } catch (SocketException | UnknownHostException e) {
+                            logger.warning("Couldn't create the seeder.");
+                        }
+
+                        if (seederServer != null) {
+                            Seeder seeder = seederServer.getSeeder();
+                            SeederMessage seederMessage = seeder.convert();
+                            logger.info("Create a seeder on " + seeder.getPort());
+                            seeders.add(seeder);
+                            responseObserver.onNext(seederMessage);
+                        }
+                    }
+                }
+            }
             responseObserver.onCompleted();
         }
 
         @Override
         public void listSeeders(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
+            logger.info("List the seeders");
             List<String> keywords = request.getKeywordList();
+            String query = "";
+            for (String keyword : keywords) {
+                query += keyword + " ";
+            }
+            query = query.trim();
             if (request.getKeywordCount() == 0){
-                for(SeederMessage seederMessage : seederMessages) {
-                    responseObserver.onNext(seederMessage);
+                for(Seeder seeder : seeders) {
+                    responseObserver.onNext(seeder.convert());
                 }
             } else {
                 // Check if a keyword or the video name is matching
-                for(SeederMessage seederMessage : seederMessages) {
-                    for (String keyword : keywords) {
-                        VideoMessage videoMessage = seederMessage.getVideo();
-                        logger.log(Level.INFO, videoMessage.getName() + " : " + keyword);
+                for(Seeder seeder : seeders) {
+                    SeederMessage seederMessage = seeder.convert();
+                    VideoMessage videoMessage = seederMessage.getVideo();
+                    final String name = videoMessage.getName();
+                    if (name.matches(query)){
+                        responseObserver.onNext(seederMessage);
+                    } else {
                         boolean send = false;
-                        if (videoMessage.getName().contains(keyword)) {
-                            send = true;
-                        } else {
-                            for (String str : videoMessage.getKeywordList()) {
-                                if (str.equals(keyword)) {
-                                    send = true;
-                                    break;
+                        for (String keyword : keywords) {
+                            if (name.contains(keyword)) {
+                                send = true;
+                            } else {
+                                for (String str : videoMessage.getKeywordList()) {
+                                    if (str.contains(keyword)) {
+                                        send = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
                         if (send) {
                             responseObserver.onNext(seederMessage);
                         }
+                    }
+                }
+            }
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void listVideos(KeywordsMessage request, StreamObserver<VideoMessage> responseObserver) {
+            logger.info("Get the list of available videos");
+
+            if (request.getKeywordCount() == 0){
+                List<Video> videos = VideoUtil.listVideos();
+                for (Video video : videos) {
+                    responseObserver.onNext(video.convert());
+                }
+            } else {
+                List<String> keywords = request.getKeywordList();
+                String keyword = "";
+                for (String str : keywords) {
+                    keyword += str + " ";
+                }
+                keyword = keyword.trim();
+                List<Video> videos = VideoUtil.getVideos(keyword);
+
+                if (videos != null) {
+                    for (Video video : videos) {
+                        responseObserver.onNext(video.convert());
                     }
                 }
             }

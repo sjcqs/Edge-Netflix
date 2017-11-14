@@ -18,7 +18,7 @@ public class RequestManager {
     private String serverUrl = DEFAULT_URL;
     private int serverPort = DEFAULT_PORT;
 
-    public RequestManager(String url, int port) throws Exception {
+    public RequestManager(String url, int port){
         SslContextFactory sslContextFactory = new SslContextFactory();
         client = new HttpClient(sslContextFactory);
         serverUrl = url;
@@ -29,12 +29,12 @@ public class RequestManager {
         try {
             return client.GET(serverUrl + ":" + serverPort + path);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            e.printStackTrace();
+            System.out.println("ERROR");
         }
         return null;
     }
 
-    public void start() throws Exception {
+    public void run() throws Exception {
         if (!client.isStarted()){
             client.start();
         }

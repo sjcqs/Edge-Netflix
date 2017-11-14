@@ -37,3 +37,4 @@ local.properties
 .gradletasknamecache
 .gradle/
 build/
+**/MANIFEST.MF
