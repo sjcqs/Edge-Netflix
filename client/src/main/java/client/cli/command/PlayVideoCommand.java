@@ -34,6 +34,7 @@ public class PlayVideoCommand extends Command {
     @Override
     public void run(Client client) {
         Video video = VideoUtil.getVideo(name, false);
+
         if (video != null) {
             System.out.println(HelpCommand.ANSI_BOLD_TEXT + "PLAYING" + HelpCommand.ANSI_PLAIN_TEXT);
             System.out.println("\t" + video.getName() + " - " + video.getFormattedDuration());
@@ -43,6 +44,7 @@ public class PlayVideoCommand extends Command {
             System.out.println("\tVideo not found.");
             System.out.println("\tType 'list files' to get all available videos.");
         }
+
     }
 
     private static void playVideo(Video video){
