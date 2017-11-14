@@ -624,4 +624,8 @@ public class Peer extends Thread{
         trackerThread.interrupt();
         Thread.currentThread().interrupt();
     }
+
+    public void setAvailableUploaders(List<PeerAddress> availableUploaders) {
+        this.availableUploaders = availableUploaders;
+    }
 }

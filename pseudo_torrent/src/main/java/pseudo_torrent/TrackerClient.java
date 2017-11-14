@@ -86,9 +86,7 @@ public class TrackerClient  implements Runnable{
                     if (response.getFailureReason() == null) {
 
                         synchronized (peer) {
-                            List<PeerAddress> addresses = peer.getAvailableUploaders();
-                            addresses.clear();
-                            addresses.addAll(response.getPeerAddresses());
+                            peer.setAvailableUploaders(response.getPeerAddresses());
                             peer.setInterval(response.getInterval());
                         }
 
