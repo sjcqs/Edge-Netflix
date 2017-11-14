@@ -13,6 +13,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.function.IntConsumer;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -386,9 +387,9 @@ public class Peer extends Thread{
                 BitSet res = VideoUtil.createVideoFile(video);
                 if (res.cardinality() == video.getChunkCount()){
                     downloaded = true;
-
                 } else {
                     field = res;
+                    field.stream().iterator().forEachRemaining((IntConsumer) chunkLeft::add);
                 }
             }
 
