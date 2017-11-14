@@ -41,12 +41,6 @@ public class SeederServer extends Thread {
 
         @Override
         public void handleBitField(BitField msg) {
-            CommunicationTable table = tableMap.get(msg.getSenderId());
-            if (table != null){
-                table.setField(msg.getField());
-                field.andNot(msg.getField());
-                postman.send(socket, msg.getAddress(), msg.getPort(), notInterested);
-            }
         }
 
         @Override
@@ -121,13 +115,6 @@ public class SeederServer extends Thread {
 
         @Override
         public void handleHave(Have msg) {
-            CommunicationTable table = tableMap.get(msg.getSenderId());
-            if (table != null) {
-                // Someone has the chunk
-                field.set(msg.getIndex(), false);
-                table.setField(msg.getIndex(), true);
-                postman.send(socket, msg.getAddress(), msg.getPort(), notInterested);
-            }
         }
 
         @Override
