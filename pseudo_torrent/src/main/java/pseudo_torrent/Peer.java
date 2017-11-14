@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
 public class Peer extends Thread{
     private final static Logger LOGGER = Logger.getLogger(Peer.class.getName());
     private static final int DOWNLOADER_COUNT = 4;
-    private static final int UPLOADER_COUNT = 3;
+    private static final int UPLOADER_COUNT = 4;
     private static final long SHUFFLE_INTERVAL = 30_000;
 
     private final Message choke;
