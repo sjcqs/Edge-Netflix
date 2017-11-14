@@ -34,14 +34,14 @@ class SeederFactory {
 
 
     /** Create a RouteGuide server listening on {@code uploadPort} using {@code featureFile} database. */
-    SeederFactory(int port) throws IOException {
-        this(ServerBuilder.forPort(port), port);
+    SeederFactory(String address, int port) throws IOException {
+        this(ServerBuilder.forPort(port), address, port);
     }
 
     /** Create a RouteGuide server using serverBuilder as a base and features as data. */
-    private SeederFactory(ServerBuilder<?> serverBuilder, int port) {
+    private SeederFactory(ServerBuilder<?> serverBuilder, String address, int port) {
         this.port = port;
-        server = serverBuilder.addService(new SeederFactoryService()).build();
+        server = serverBuilder.addService(new SeederFactoryService(address)).build();
     }
 
     /** Start serving requests. */
@@ -73,10 +73,13 @@ class SeederFactory {
     }
 
     private static class SeederFactoryService extends SeederFactoryImplBase{
-        //private static final String SEEDER_FACTORY_ADDRESS = "35.187.4.11";
-        private static final String SEEDER_FACTORY_ADDRESS = "localhost";
         private final List<Seeder> seeders = new LinkedList<>();
         private final ExecutorService threadPool = Executors.newCachedThreadPool();
+        private final String address;
+
+        public SeederFactoryService(String address) {
+            this.address = address;
+        }
 
         @Override
         public void createSeeder(KeywordsMessage request, StreamObserver<SeederMessage> responseObserver) {
@@ -103,7 +106,7 @@ class SeederFactory {
                     if (!found) {
                         SeederServer seederServer = null;
                         try {
-                            seederServer = new SeederServer(SEEDER_FACTORY_ADDRESS, video);
+                            seederServer = new SeederServer(address, video);
                             threadPool.submit(seederServer);
                         } catch (SocketException | UnknownHostException e) {
                             logger.warning("Couldn't create the seeder.");

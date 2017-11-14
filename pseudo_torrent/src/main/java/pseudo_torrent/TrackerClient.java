@@ -36,6 +36,7 @@ public class TrackerClient  implements Runnable{
     public void run() {
          DatagramSocket socket = null;
         try {
+            LOGGER.info("Sending: " + seeder.getAddress() + ":" + seeder.getPort());
             socket = new DatagramSocket();
             Gson gson = new Gson();
             byte[] buf;

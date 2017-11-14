@@ -116,7 +116,6 @@ public class Video implements Convertible<VideoMessage> {
         if (checksums != null){
             builder.addAllChecksums(checksums);
         }
-
         int width, height;
         String[] sizes = size.split("x");
         width = Integer.valueOf(sizes[0]);
